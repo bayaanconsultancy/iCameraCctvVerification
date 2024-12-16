@@ -1,7 +1,7 @@
-package com.tcs.ion.icamera.cctv.onvif;
+package com.cs.on.icamera.cctv.onvif;
 
-import com.tcs.ion.icamera.cctv.model.Cctv;
-import com.tcs.ion.icamera.cctv.util.Network;
+import com.cs.on.icamera.cctv.model.Cctv;
+import com.cs.on.icamera.cctv.util.Network;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.tcs.ion.icamera.cctv.data.DataStore.addDiscoveredCctv;
-import static com.tcs.ion.icamera.cctv.data.DataStore.getDiscoveredCctvCount;
+import static com.cs.on.icamera.cctv.data.DataStore.addDiscoveredCctv;
+import static com.cs.on.icamera.cctv.data.DataStore.getDiscoveredCctvCount;
 
 public class OnvifDiscovery {
 	private static final Logger logger = LogManager.getLogger(OnvifDiscovery.class);

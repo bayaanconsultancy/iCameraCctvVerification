@@ -1,8 +1,8 @@
-package com.tcs.ion.icamera.cctv.onvif;
+package com.cs.on.icamera.cctv.onvif;
 
-import com.tcs.ion.icamera.cctv.model.Cctv;
-import com.tcs.ion.icamera.cctv.model.OnvifAuth;
-import com.tcs.ion.icamera.cctv.util.HttpRequest;
+import com.cs.on.icamera.cctv.model.Cctv;
+import com.cs.on.icamera.cctv.model.OnvifAuth;
+import com.cs.on.icamera.cctv.util.HttpRequest;
 import jakarta.xml.soap.SOAPException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +11,7 @@ import org.dom4j.DocumentException;
 import java.io.IOException;
 import java.util.List;
 
-import static com.tcs.ion.icamera.cctv.util.Token.buildSoapRequest;
+import static com.cs.on.icamera.cctv.util.Token.buildSoapRequest;
 
 public class OnvifCapabilities {
     private static final Logger logger = LogManager.getLogger(OnvifCapabilities.class);

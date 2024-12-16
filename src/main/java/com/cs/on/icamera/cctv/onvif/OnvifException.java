@@ -1,4 +1,4 @@
-package com.tcs.ion.icamera.cctv.onvif;
+package com.cs.on.icamera.cctv.onvif;
 
 public class OnvifException extends Exception {
 

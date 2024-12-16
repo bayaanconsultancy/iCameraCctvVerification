@@ -1,6 +1,6 @@
-package com.tcs.ion.icamera.cctv.util;
+package com.cs.on.icamera.cctv.util;
 
-import com.tcs.ion.icamera.cctv.onvif.OnvifException;
+import com.cs.on.icamera.cctv.onvif.OnvifException;
 import jakarta.xml.soap.SOAPMessage;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpRequest {

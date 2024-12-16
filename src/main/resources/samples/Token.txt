@@ -1,6 +1,6 @@
 package com.tcs.ion.icamera.cctv.util;
 
-import com.tcs.ion.icamera.cctv.model.OnvifAuth;
+import model.com.cs.on.icamera.cctv.OnvifAuth;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 

@@ -25,7 +25,7 @@
               <transformers>
                 <transformer>
                   <manifestEntries>
-                    <Main-Class>com.tcs.ion.icamera.cctv.Main</Main-Class>
+                    <Main-Class>com.cs.on.icamera.cctv.Main</Main-Class>
                     <Multi-Release>true</Multi-Release>
                   </manifestEntries>
                 </transformer>

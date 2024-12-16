@@ -1,4 +1,4 @@
-package com.tcs.ion.icamera.cctv.onvif;
+package com.cs.on.icamera.cctv.onvif;
 
 //import com.github.chengtengfei.onvif.discovery.IPCDiscovery;
 //import com.github.chengtengfei.onvif.model.OnvifDeviceInfo;

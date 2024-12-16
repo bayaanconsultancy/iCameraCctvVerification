@@ -1,4 +1,4 @@
-package com.tcs.ion.icamera.cctv.model;
+package com.cs.on.icamera.cctv.model;
 
 public class OnvifAuth {
 	private String username;

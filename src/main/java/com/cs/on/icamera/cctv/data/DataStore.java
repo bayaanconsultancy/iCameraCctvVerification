@@ -1,6 +1,6 @@
-package com.tcs.ion.icamera.cctv.data;
+package com.cs.on.icamera.cctv.data;
 
-import com.tcs.ion.icamera.cctv.model.Cctv;
+import com.cs.on.icamera.cctv.model.Cctv;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

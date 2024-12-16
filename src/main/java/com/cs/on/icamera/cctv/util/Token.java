@@ -1,7 +1,7 @@
-package com.tcs.ion.icamera.cctv.util;
+package com.cs.on.icamera.cctv.util;
 
 
-import com.tcs.ion.icamera.cctv.model.OnvifAuth;
+import com.cs.on.icamera.cctv.model.OnvifAuth;
 import jakarta.xml.soap.*;
 
 import javax.xml.namespace.QName;

@@ -1,9 +1,9 @@
-package com.tcs.ion.icamera.cctv.onvif;
+package com.cs.on.icamera.cctv.onvif;
 
-import com.tcs.ion.icamera.cctv.data.DataStore;
-import com.tcs.ion.icamera.cctv.model.Cctv;
-import com.tcs.ion.icamera.cctv.model.OnvifAuth;
-import com.tcs.ion.icamera.cctv.util.Token;
+import com.cs.on.icamera.cctv.data.DataStore;
+import com.cs.on.icamera.cctv.model.Cctv;
+import com.cs.on.icamera.cctv.model.OnvifAuth;
+import com.cs.on.icamera.cctv.util.Token;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

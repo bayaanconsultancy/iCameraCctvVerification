@@ -1,11 +1,11 @@
-package com.tcs.ion.icamera.cctv.model;
+package com.cs.on.icamera.cctv.model;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tcs.ion.icamera.cctv.onvif.OnvifResponseParser.parseIpPort;
+import static com.cs.on.icamera.cctv.onvif.OnvifResponseParser.parseIpPort;
 
 public class Cctv {
 	private final List<MediaProfile> profiles;
