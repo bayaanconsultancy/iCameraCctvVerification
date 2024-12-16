@@ -1,0 +1,72 @@
+package com.tcs.ion.icamera.cctv.util;
+
+import com.tcs.ion.icamera.cctv.model.OnvifAuth;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public class Token {
+	private static final String WSS_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+	private static String created() {
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern(WSS_TIMESTAMP_FORMAT));
+	}
+
+	private static String expires() {
+		return LocalDateTime.now().plusMinutes(15).format(DateTimeFormatter.ofPattern(WSS_TIMESTAMP_FORMAT));
+	}
+
+	private static String wsdlPasswordDigest(String nonce, String createTime, String password) {
+		// WS-Security defines password digest as Base64 ( SHA1 ( nonce + created +
+		// password ) )
+		MessageDigest digest = DigestUtils.getSha1Digest();
+		digest.update((nonce + createTime + password).getBytes());
+		return new String(Base64.encodeBase64(digest.digest()), StandardCharsets.UTF_8);
+	}
+
+	private static String generateRandomNonce() {
+		String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
+		StringBuilder sb = new StringBuilder(16);
+
+		for (int i = 0; i < 16; i++) {
+			int index = (int) (AlphaNumericString.length() * Math.random());
+			sb.append(AlphaNumericString.charAt(index));
+		}
+		return sb.toString();
+	}
+
+	public static String generateNonce() {
+		SecureRandom random = new SecureRandom();
+		byte[] nonce = new byte[16];  // 16-byte random nonce
+		random.nextBytes(nonce);
+		return java.util.Base64.getEncoder().encodeToString(nonce);
+	}
+
+	public static String generatePasswordDigest(String password, String nonce, String timestamp) throws NoSuchAlgorithmException {
+		// Concatenate nonce, timestamp, and password
+		String toHash = nonce + timestamp + password;
+
+		// Create SHA-1 hash of the concatenated string
+		MessageDigest digest = MessageDigest.getInstance("SHA-1");
+		byte[] hashedBytes = digest.digest(toHash.getBytes());
+
+		// Return the Base64 encoded result
+		return java.util.Base64.getEncoder().encodeToString(hashedBytes);
+	}
+
+	public static OnvifAuth generate(String username, String password) {
+        String create = created();
+        String expire = expires();
+		String rawNonce = generateRandomNonce();
+		String nonce = new String(Base64.encodeBase64(rawNonce.getBytes()), StandardCharsets.UTF_8);
+		String passwordDigest = wsdlPasswordDigest(rawNonce, create, password);
+		return new OnvifAuth.Builder().username(username).password(passwordDigest).nonce(nonce).created(create)
+				.expires(expire).build();
+	}
+}

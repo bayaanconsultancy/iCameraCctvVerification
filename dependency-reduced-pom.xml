@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.example</groupId>
+  <artifactId>iCameraCctvVerification</artifactId>
+  <version>1.0</version>
+  <description>This project is a tool to verify the configuration of the of CCTVs with iCamera.</description>
+  <inceptionYear>2024</inceptionYear>
+  <organization>
+    <name>Tata Consultancy Services</name>
+  </organization>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <finalName>cv</finalName>
+              <transformers>
+                <transformer>
+                  <manifestEntries>
+                    <Main-Class>com.tcs.ion.icamera.cctv.Main</Main-Class>
+                    <Multi-Release>true</Multi-Release>
+                  </manifestEntries>
+                </transformer>
+                <transformer />
+                <transformer />
+                <transformer />
+                <transformer>
+                  <resources>
+                    <resource>META-INF/MANIFEST.MF</resource>
+                    <resource>META-INF/DEPENDENCIES</resource>
+                  </resources>
+                </transformer>
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>module-info.class</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-transform-maven-shade-plugin-extensions</artifactId>
+            <version>0.2.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+</project>

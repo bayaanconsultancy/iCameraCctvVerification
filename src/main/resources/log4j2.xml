@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration status="warn">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %m%n" />
+		</Console>
+		<RollingFile name="File"
+			fileName="logs/cctv-verification.log"
+			filePattern="logs/cctv-verification-%d{yyyyMMdd}.log"
+			immediateFlush="true">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.tcs.ion.camera.cctv" level="info">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Root level="info">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>

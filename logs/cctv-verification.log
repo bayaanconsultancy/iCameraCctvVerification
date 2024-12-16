@@ -1,0 +1,169 @@
+2024-12-14 14:22:03.004 [main] INFO  com.tcs.ion.icamera.cctv.onvif.Exploration - Discovered 1 ONVIF devices.
+2024-12-14 14:22:03.006 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Starting ONVIF device discovery.
+2024-12-14 14:22:03.007 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Obtained free local port: 62511
+2024-12-14 14:22:03.008 [main] INFO  com.tcs.ion.icamera.cctv.util.Network - Network interfaces: [name:utun3 (utun3), name:utun2 (utun2), name:utun1 (utun1), name:utun0 (utun0), name:llw0 (llw0), name:awdl0 (awdl0), name:en1 (en1), name:en0 (en0)]
+2024-12-14 14:22:03.009 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:utun3 (utun3)
+2024-12-14 14:22:03.009 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error with multicast socket on interface name:utun3 (utun3):
+java.net.BindException: Can't assign requested address (setsockopt failed)
+	at java.base/sun.nio.ch.Net.joinOrDrop6(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.join6(Net.java:751) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.innerJoin(DatagramChannelImpl.java:1658) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.join(DatagramChannelImpl.java:1694) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:494) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:440) ~[?:?]
+	at java.base/java.net.MulticastSocket.joinGroup(MulticastSocket.java:324) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.createMulticastGroupSocket(OnvifDiscovery.java:48) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:79) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:03.016 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:utun2 (utun2)
+2024-12-14 14:22:03.016 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error with multicast socket on interface name:utun2 (utun2):
+java.net.BindException: Can't assign requested address (setsockopt failed)
+	at java.base/sun.nio.ch.Net.joinOrDrop6(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.join6(Net.java:751) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.innerJoin(DatagramChannelImpl.java:1658) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.join(DatagramChannelImpl.java:1694) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:494) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:440) ~[?:?]
+	at java.base/java.net.MulticastSocket.joinGroup(MulticastSocket.java:324) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.createMulticastGroupSocket(OnvifDiscovery.java:48) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:79) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:03.016 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:utun1 (utun1)
+2024-12-14 14:22:03.017 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error with multicast socket on interface name:utun1 (utun1):
+java.net.BindException: Can't assign requested address (setsockopt failed)
+	at java.base/sun.nio.ch.Net.joinOrDrop6(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.join6(Net.java:751) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.innerJoin(DatagramChannelImpl.java:1658) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.join(DatagramChannelImpl.java:1694) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:494) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:440) ~[?:?]
+	at java.base/java.net.MulticastSocket.joinGroup(MulticastSocket.java:324) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.createMulticastGroupSocket(OnvifDiscovery.java:48) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:79) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:03.017 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:utun0 (utun0)
+2024-12-14 14:22:03.018 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error with multicast socket on interface name:utun0 (utun0):
+java.net.BindException: Can't assign requested address (setsockopt failed)
+	at java.base/sun.nio.ch.Net.joinOrDrop6(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.join6(Net.java:751) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.innerJoin(DatagramChannelImpl.java:1658) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.join(DatagramChannelImpl.java:1694) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:494) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:440) ~[?:?]
+	at java.base/java.net.MulticastSocket.joinGroup(MulticastSocket.java:324) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.createMulticastGroupSocket(OnvifDiscovery.java:48) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:79) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:03.018 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:llw0 (llw0)
+2024-12-14 14:22:03.018 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error with multicast socket on interface name:llw0 (llw0):
+java.net.BindException: Can't assign requested address (setsockopt failed)
+	at java.base/sun.nio.ch.Net.joinOrDrop6(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.join6(Net.java:751) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.innerJoin(DatagramChannelImpl.java:1658) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.join(DatagramChannelImpl.java:1694) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:494) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:440) ~[?:?]
+	at java.base/java.net.MulticastSocket.joinGroup(MulticastSocket.java:324) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.createMulticastGroupSocket(OnvifDiscovery.java:48) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:79) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:03.018 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:awdl0 (awdl0)
+2024-12-14 14:22:03.019 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error with multicast socket on interface name:awdl0 (awdl0):
+java.net.BindException: Can't assign requested address (setsockopt failed)
+	at java.base/sun.nio.ch.Net.joinOrDrop6(Native Method) ~[?:?]
+	at java.base/sun.nio.ch.Net.join6(Net.java:751) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.innerJoin(DatagramChannelImpl.java:1658) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.join(DatagramChannelImpl.java:1694) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:494) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:440) ~[?:?]
+	at java.base/java.net.MulticastSocket.joinGroup(MulticastSocket.java:324) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.createMulticastGroupSocket(OnvifDiscovery.java:48) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:79) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:03.019 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:en1 (en1)
+2024-12-14 14:22:03.020 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Joined multicast group on interface: name:en1 (en1)
+2024-12-14 14:22:03.020 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Sent discovery data.
+2024-12-14 14:22:04.022 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error receiving data from multicast group 239.255.255.250:3702
+java.net.SocketTimeoutException: Receive timed out
+	at java.base/sun.nio.ch.DatagramChannelImpl.tryBlockingReceive(DatagramChannelImpl.java:760) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.blockingReceive(DatagramChannelImpl.java:692) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.receive(DatagramSocketAdaptor.java:204) ~[?:?]
+	at java.base/java.net.DatagramSocket.receive(DatagramSocket.java:714) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.receiveData(OnvifDiscovery.java:64) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:87) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:05.025 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error receiving data from multicast group 239.255.255.250:3702
+java.net.SocketTimeoutException: Receive timed out
+	at java.base/sun.nio.ch.DatagramChannelImpl.tryBlockingReceive(DatagramChannelImpl.java:760) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.blockingReceive(DatagramChannelImpl.java:692) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.receive(DatagramSocketAdaptor.java:204) ~[?:?]
+	at java.base/java.net.DatagramSocket.receive(DatagramSocket.java:714) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.receiveData(OnvifDiscovery.java:64) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:87) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:06.028 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error receiving data from multicast group 239.255.255.250:3702
+java.net.SocketTimeoutException: Receive timed out
+	at java.base/sun.nio.ch.DatagramChannelImpl.tryBlockingReceive(DatagramChannelImpl.java:760) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.blockingReceive(DatagramChannelImpl.java:692) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.receive(DatagramSocketAdaptor.java:204) ~[?:?]
+	at java.base/java.net.DatagramSocket.receive(DatagramSocket.java:714) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.receiveData(OnvifDiscovery.java:64) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:87) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:06.029 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - No ONVIF devices found on interface name:en1 (en1).
+2024-12-14 14:22:06.031 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Checking network interface: name:en0 (en0)
+2024-12-14 14:22:06.033 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Joined multicast group on interface: name:en0 (en0)
+2024-12-14 14:22:06.034 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Sent discovery data.
+2024-12-14 14:22:07.035 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error receiving data from multicast group 239.255.255.250:3702
+java.net.SocketTimeoutException: Receive timed out
+	at java.base/sun.nio.ch.DatagramChannelImpl.tryBlockingReceive(DatagramChannelImpl.java:760) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.blockingReceive(DatagramChannelImpl.java:692) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.receive(DatagramSocketAdaptor.java:204) ~[?:?]
+	at java.base/java.net.DatagramSocket.receive(DatagramSocket.java:714) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.receiveData(OnvifDiscovery.java:64) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:87) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:08.038 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error receiving data from multicast group 239.255.255.250:3702
+java.net.SocketTimeoutException: Receive timed out
+	at java.base/sun.nio.ch.DatagramChannelImpl.tryBlockingReceive(DatagramChannelImpl.java:760) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.blockingReceive(DatagramChannelImpl.java:692) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.receive(DatagramSocketAdaptor.java:204) ~[?:?]
+	at java.base/java.net.DatagramSocket.receive(DatagramSocket.java:714) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.receiveData(OnvifDiscovery.java:64) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:87) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:09.041 [main] ERROR com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - Error receiving data from multicast group 239.255.255.250:3702
+java.net.SocketTimeoutException: Receive timed out
+	at java.base/sun.nio.ch.DatagramChannelImpl.tryBlockingReceive(DatagramChannelImpl.java:760) ~[?:?]
+	at java.base/sun.nio.ch.DatagramChannelImpl.blockingReceive(DatagramChannelImpl.java:692) ~[?:?]
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.receive(DatagramSocketAdaptor.java:204) ~[?:?]
+	at java.base/java.net.DatagramSocket.receive(DatagramSocket.java:714) ~[?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.receiveData(OnvifDiscovery.java:64) ~[classes/:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.lambda$discover$0(OnvifDiscovery.java:87) ~[classes/:?]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) [?:?]
+	at com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery.discover(OnvifDiscovery.java:77) [classes/:?]
+	at com.tcs.ion.icamera.cctv.Main.main(Main.java:10) [classes/:?]
+2024-12-14 14:22:09.042 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - No ONVIF devices found on interface name:en0 (en0).
+2024-12-14 14:22:09.042 [main] INFO  com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery - ONVIF device discovery completed.
