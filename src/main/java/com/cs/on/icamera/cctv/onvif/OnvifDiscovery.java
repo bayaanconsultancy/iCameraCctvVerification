@@ -54,31 +54,11 @@ public class OnvifDiscovery {
 		try {
 			WS_DISCOVERY_MULTICAST_INET_ADDRESS = InetAddress.getByName(WS_DISCOVERY_MULTICAST_IP_ADDRESS);
 		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
+			throw new OnvifDiscoveryException("Failed to resolve multicast IP address", e);
 		}
 	}
 
 	private static String currentInterfaceName;
-
-	/**
-	 * Creates a new MulticastSocket object that listens for incoming datagram
-	 * packets on the specified port and network interface.
-	 *
-	 * @param port             the port number to listen on
-	 * @param networkInterface the network interface to listen on
-	 * @return the newly created MulticastSocket object
-	 * @throws IOException if an I/O error occurs
-	 */
-	private static MulticastSocket createMulticastGroupSocket(int port, NetworkInterface networkInterface)
-			throws IOException {
-		MulticastSocket socket = new MulticastSocket(port);
-		socket.setNetworkInterface(networkInterface);
-		socket.setSoTimeout(WS_DISCOVERY_SOCKET_TIMEOUT);
-		// The following line is commented out because joining the
-		// multicast group is not necessary for this use case.
-		// socket.joinGroup(WS_DISCOVERY_MULTICAST_INET_ADDRESS);
-		return socket;
-	}
 
 	/**
 	 * Sends a datagram packet containing the specified data to the multicast group.
@@ -138,15 +118,16 @@ public class OnvifDiscovery {
 
 			Network.getNetworkInterfaces().forEach(networkInterface -> {
 				currentInterfaceName = networkInterface.getName();
-				logger.info("Checking network interface: {}", networkInterface);
+				logger.info("Discovering ONVIF devices on interface {}", networkInterface);
 
-				try (MulticastSocket socket = createMulticastGroupSocket(localPort, networkInterface)) {
-					// Join the multicast group on the network interface
-					logger.debug("Joined multicast group on interface: {}", currentInterfaceName);
+				try (MulticastSocket socket = new MulticastSocket(localPort)) {
+					socket.setNetworkInterface(networkInterface);
+					socket.setSoTimeout(WS_DISCOVERY_SOCKET_TIMEOUT);
+					logger.debug("Created multicast socket on interface {}", currentInterfaceName);
 
 					// Send the discovery data to the multicast group
 					sendData(socket);
-					logger.debug("Sent discovery data.");
+					logger.debug("Sent discovery packets to multicast group on interface {}", currentInterfaceName);
 
 					// Receive the responses from the ONVIF devices
 					List<DatagramPacket> packets = new ArrayList<>();
@@ -172,40 +153,40 @@ public class OnvifDiscovery {
 	}
 
 	/**
-	 * Parses the responses received from ONVIF devices and extracts their service
-	 * addresses.
+	 * Parses the responses received from ONVIF devices, extracts their service addresses,
+	 * and adds them to the discovered CCTV list.
 	 *
-	 * @param packets the list of DatagramPackets containing responses from ONVIF
-	 *                devices
+	 * @param packets The list of DatagramPacket objects containing the responses from ONVIF devices.
 	 */
 	private static void parseResponses(List<DatagramPacket> packets) {
-		// Iterate over each received packet
+		int discoveredCount = 0;
+
 		for (DatagramPacket packet : packets) {
-			if (packet == null)
-				continue; // Skip null packets
+			// Skip empty or null packets
+			if (packet == null || packet.getLength() == 0)
+				continue;
 
-			// Convert packet data to a string
+			// Convert packet data to a string for processing
 			String response = new String(packet.getData(), packet.getOffset(), packet.getLength());
-			if (response.isEmpty())
-				continue; // Skip empty responses
-
 			logger.info("Processing ONVIF device response: {}", response);
 
-			String address = null;
 			try {
-				// Parse the service address from the response
-				address = OnvifResponseParser.parseOnvifAddress(response);
+				// Parse the ONVIF address from the response
+				String address = OnvifResponseParser.parseOnvifAddress(response);
+				if (address != null) {
+					// Add the discovered CCTV device using the parsed address
+					addDiscoveredCctv(new Cctv().withOnvifDeviceUrl(address));
+					discoveredCount++;
+				} else {
+					logger.error("Empty ONVIF device service address in response: {}", response);
+				}
 			} catch (DocumentException e) {
-				logger.error("Error parsing ONVIF device service address in response: {} as: {}", response,
-						e.getMessage());
+				// Log an error if there is an issue parsing the response
+				logger.error("Error parsing ONVIF device service address in response: {} as: {}", response, e.getMessage());
 			}
-
-			if (address == null)
-				logger.error("Empty ONVIF device service address in response: {}", response);
-			else
-				addDiscoveredCctv(new Cctv().withOnvifDeviceUrl(address));
 		}
 
-		logger.info("Total discovered ONVIF devices count: {}", getDiscoveredCctvCount());
+		// Log the total number of discovered ONVIF devices
+		logger.info("Total discovered ONVIF devices count: {}", discoveredCount);
 	}
 }

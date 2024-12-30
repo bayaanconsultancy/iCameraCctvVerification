@@ -58,6 +58,46 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>com.cs.on.icamera.cctv.Main</mainClass>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+        <artifactId>launch4j-maven-plugin</artifactId>
+        <version>2.5.2</version>
+        <executions>
+          <execution>
+            <id>l4j-client</id>
+            <phase>package</phase>
+            <goals>
+              <goal>launch4j</goal>
+            </goals>
+            <configuration>
+              <headerType>console</headerType>
+              <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+              <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+              <errTitle>${project.name}</errTitle>
+              <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+              <classPath>
+                <mainClass>com.cs.on.icamera.cctv.Main</mainClass>
+              </classPath>
+              <icon>src/main/resources/logo.ico</icon>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <properties>

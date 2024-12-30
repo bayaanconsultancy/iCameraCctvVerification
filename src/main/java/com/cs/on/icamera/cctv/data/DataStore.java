@@ -43,4 +43,11 @@ public class DataStore {
 			cctv.setPassword(password);
 		}
 	}
+
+	public static void setOnvifUsernamePassword(String username, String password) {
+		for (Cctv cctv : discoveredCctvs.values()) {
+			cctv.setOnvifUsername(username);
+			cctv.setOnvifPassword(password);
+		}
+	}
 }

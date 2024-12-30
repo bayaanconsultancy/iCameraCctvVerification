@@ -7,3 +7,19 @@ rtsp://admin:Aminul@24@192.168.0.113:5543/live/channel1
 
 Create a Java app to discover CCTVs in local networks and get device and media stream information using ONVIF protocol with password digest authentication.
 
+<wsu:Timestamp wsu:Id="timestamp">
+<wsu:Created>%s</wsu:Created>
+<wsu:Expires>%s</wsu:Expires>
+</wsu:Timestamp>
+
+
+<dependency>
+<groupId>jakarta.xml.soap</groupId>
+<artifactId>jakarta.xml.soap-api</artifactId>
+<version>3.0.2</version>
+</dependency>
+<dependency>
+<groupId>com.sun.xml.messaging.saaj</groupId>
+<artifactId>saaj-impl</artifactId>
+<version>3.0.4</version>
+</dependency>

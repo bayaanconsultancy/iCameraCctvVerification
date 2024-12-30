@@ -15,8 +15,10 @@ public class OnvifEnquiry {
 
 	public static void getOnvifDetails(Cctv cctv) {
 		try {
-			OnvifCapabilities.getCapabilities(cctv);
-			OnvifSystemDateAndTime.getSystemDateAndTime(cctv);
+			OnvifCapabilities.get(cctv);
+			OnvifSystemDateAndTime.get(cctv);
+			OnvifProfiles.get(cctv);
+			OnvifDeviceInformation.get(cctv);
 			logger.info("Got ONVIF details for {}", cctv);
 		} catch (Exception e) {
 			logger.error("Error getting ONVIF details for {}", cctv, e);

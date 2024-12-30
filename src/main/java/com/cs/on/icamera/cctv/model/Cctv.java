@@ -199,4 +199,12 @@ public class Cctv {
 	public OnvifDeviceInfo onvifDeviceInfo() {
 		return onvifDeviceInfo;
 	}
+
+	public void setOnvifUsername(String username) {
+		this.onvifDeviceInfo.setUsername(username);
+	}
+
+	public void setOnvifPassword(String password) {
+		this.onvifDeviceInfo.setPassword(password);
+	}
 }

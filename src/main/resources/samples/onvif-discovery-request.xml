@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope
+        xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+        xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+        xmlns:tns="http://schemas.xmlsoap.org/ws/2005/04/discovery">
+    <soap:Header>
+        <wsa:Action>
+            http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe
+        </wsa:Action>
+        <wsa:MessageID>
+            uuid:0a6dc791-2be6-4991-9af1-454778a1917a
+        </wsa:MessageID>
+        <wsa:To>
+            urn:schemas-xmlsoap-org:ws:2005:04:discovery
+        </wsa:To>
+    </soap:Header>
+    <soap:Body>
+        <tns:Probe>
+            <tns:Types>i:PrintBasic</tns:Types>
+            <tns:Scopes
+                    MatchBy="http://schemas.xmlsoap.org/ws/2005/04/discovery/ldap">
+                ldap:///ou=engineering,o=examplecom,c=us
+            </tns:Scopes>
+        </tns:Probe>
+    </soap:Body>
+</soap:Envelope>

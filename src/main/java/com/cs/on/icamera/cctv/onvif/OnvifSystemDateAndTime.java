@@ -29,7 +29,7 @@ public class OnvifSystemDateAndTime {
 	 * @throws OnvifException if the SOAP request fails or the response could not be
 	 *                        parsed
 	 */
-	public static void getSystemDateAndTime(Cctv cctv) throws OnvifException {
+	public static void get(Cctv cctv) throws OnvifException {
 		try {
 			// Send the SOAP request and get the response
 			String response = HttpSoapClient.postXml(cctv.getOnvifDeviceUrl(), ONVIF_GET_DATETIME);

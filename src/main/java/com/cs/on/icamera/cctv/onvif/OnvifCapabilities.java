@@ -28,7 +28,7 @@ public class OnvifCapabilities {
 	 * @param cctv the ONVIF device to retrieve the capabilities for
 	 * @throws OnvifException if there is an error making the request
 	 */
-	public static void getCapabilities(Cctv cctv) throws OnvifException {
+	public static void get(Cctv cctv) throws OnvifException {
 		try {
 			// Make the request to the ONVIF device
 			String response = HttpSoapClient.postXml(cctv.getOnvifDeviceUrl(), ONVIF_GET_CAPABILITIES);

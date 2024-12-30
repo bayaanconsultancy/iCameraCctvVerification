@@ -8,81 +8,57 @@ public class Profile {
 	private Integer frameRateLimit;
 	private Integer bitRateLimit;
 
-	public String getStreamUri() {
+	public String streamUri() {
 		return streamUri;
 	}
 
-	public void setStreamUri(String streamUri) {
+	public Profile setStreamUri(String streamUri) {
 		this.streamUri = streamUri;
+		return this;
 	}
 
-	public String getVideoEncoding() {
+	public String videoEncoding() {
 		return videoEncoding;
 	}
 
-	public void setVideoEncoding(String videoEncoding) {
+	public Profile setVideoEncoding(String videoEncoding) {
 		this.videoEncoding = videoEncoding;
+		return this;
 	}
 
-	public Integer getVideoWidth() {
+	public Integer videoWidth() {
 		return videoWidth;
 	}
 
-	public void setVideoWidth(Integer videoWidth) {
+	public Profile setVideoWidth(Integer videoWidth) {
 		this.videoWidth = videoWidth;
+		return this;
 	}
 
-	public Integer getVideoHeight() {
+	public Integer videoHeight() {
 		return videoHeight;
 	}
 
-	public void setVideoHeight(Integer videoHeight) {
+	public Profile setVideoHeight(Integer videoHeight) {
 		this.videoHeight = videoHeight;
+		return this;
 	}
 
-	public Integer getFrameRateLimit() {
+	public Integer frameRateLimit() {
 		return frameRateLimit;
 	}
 
-	public void setFrameRateLimit(Integer frameRateLimit) {
+	public Profile setFrameRateLimit(Integer frameRateLimit) {
 		this.frameRateLimit = frameRateLimit;
+		return this;
 	}
 
-	public Integer getBitRateLimit() {
+	public Integer bitRateLimit() {
 		return bitRateLimit;
 	}
 
-	public void setBitRateLimit(Integer bitRateLimit) {
+	public Profile setBitRateLimit(Integer bitRateLimit) {
 		this.bitRateLimit = bitRateLimit;
-	}
-
-	public Profile withStreamUri(String streamUri) {
-		this.setStreamUri(streamUri);
-		return this;
-	}
-
-	public Profile withVideoEncoding(String videoEncoding) {
-		this.setVideoEncoding(videoEncoding);
-		return this;
-	}
-
-	public Profile withVideoWidth(Integer videoWidth) {
-		this.setVideoWidth(videoWidth);
-		return this;
-	}
-
-	public Profile withVideoHeight(Integer videoHeight) {
-		this.setVideoHeight(videoHeight);
-		return this;
-	}
-
-	public Profile withFrameRateLimit(Integer frameRateLimit) {
-		this.setFrameRateLimit(frameRateLimit);
-		return this;
-	}
-
-	public Profile withBitRateLimit(Integer bitRateLimit) {
-		this.setBitRateLimit(bitRateLimit);
 		return this;
 	}
 }

@@ -2,130 +2,190 @@ package com.cs.on.icamera.cctv.model;
 
 import com.google.gson.Gson;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Base64;
+import java.util.Date;
+import java.util.TimeZone;
+
 public class OnvifDeviceInfo {
-	private String analyticsUrl;
-	private String deviceUrl;
-	private String eventsUrl;
-	private String imagingUrl;
-	private String mediaUrl;
-	private String ptzUrl;
-	private String nonce;
-	private String created;
-	private String expires;
-	private String username;
-	private String password;
-	private String systemDateAndTime;
+    private static final long EXPIRY_TIME_MILLIS = 3600000;
+    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-	public String analyticsUrl() {
-		return analyticsUrl;
-	}
+    static {
+        DATE_FORMATTER.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
-	public OnvifDeviceInfo setAnalyticsUrl(String analyticsUrl) {
-		this.analyticsUrl = analyticsUrl;
-		return this;
-	}
+    private final byte[] nonce;
+    private String analyticsUrl;
+    private String deviceUrl;
+    private String eventsUrl;
+    private String imagingUrl;
+    private String mediaUrl;
+    private String ptzUrl;
+    private Date created;
+    private Date expires;
+    private String username;
+    private String password;
+    private String systemDateAndTime;
 
-	public String deviceUrl() {
-		return deviceUrl;
-	}
+    public OnvifDeviceInfo() {
+        this.nonce = generateNonce();
+        this.created = new Date();
+        this.expires = new Date(created.getTime() + EXPIRY_TIME_MILLIS);
+        this.username = "admin";
+    }
 
-	public OnvifDeviceInfo setDeviceUrl(String deviceUrl) {
-		this.deviceUrl = deviceUrl;
-		return this;
-	}
+    public byte[] generateNonce() {
+        byte[] bytes = new byte[16];
+        new SecureRandom().nextBytes(bytes);
 
-	public String eventsUrl() {
-		return eventsUrl;
-	}
+        return bytes;
+    }
 
-	public OnvifDeviceInfo setEventsUrl(String eventsUrl) {
-		this.eventsUrl = eventsUrl;
-		return this;
-	}
+    public String passwordDigest() throws NoSuchAlgorithmException {
+        // Password_Digest = Base64 ( SHA-1 ( nonce + created + password ) )
 
-	public String imagingUrl() {
-		return imagingUrl;
-	}
+        MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
 
-	public OnvifDeviceInfo setImagingUrl(String imagingUrl) {
-		this.imagingUrl = imagingUrl;
-		return this;
-	}
+        sha1.update(nonce);
+        sha1.update(created().getBytes());
+        sha1.update(password().getBytes());
 
-	public String mediaUrl() {
-		return mediaUrl;
-	}
+        return new String(Base64.getEncoder().encode(sha1.digest()), StandardCharsets.UTF_8);
+    }
 
-	public OnvifDeviceInfo setMediaUrl(String mediaUrl) {
-		this.mediaUrl = mediaUrl;
-		return this;
-	}
+    public String nonce() {
+        return new String(Base64.getEncoder().encode(nonce), StandardCharsets.UTF_8);
+    }
 
-	public String ptzUrl() {
-		return ptzUrl;
-	}
+    public String created() {
+        return DATE_FORMATTER.format(created);
+    }
 
-	public OnvifDeviceInfo setPtzUrl(String ptzUrl) {
-		this.ptzUrl = ptzUrl;
-		return this;
-	}
+    public String header() throws NoSuchAlgorithmException {
+        return """
+                <Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                            <wsse:UsernameToken wsu:Id="usernameToken">
+                                <wsse:Username>%s</wsse:Username>
+                                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">%s</wsse:Password>
+                                <wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">%s</wsse:Nonce>
+                                <wsu:Created>%s</wsu:Created>
+                            </wsse:UsernameToken>
+                        </Security>""".formatted(username(), passwordDigest(), nonce(), created());
+    }
 
-	public String nonce() {
-		return nonce;
-	}
+    public String analyticsUrl() {
+        return analyticsUrl;
+    }
 
-	public OnvifDeviceInfo setNonce(String nonce) {
-		this.nonce = nonce;
-		return this;
-	}
+    public OnvifDeviceInfo setAnalyticsUrl(String analyticsUrl) {
+        this.analyticsUrl = analyticsUrl;
+        return this;
+    }
 
-	public String created() {
-		return created;
-	}
+    public String deviceUrl() {
+        return deviceUrl;
+    }
 
-	public OnvifDeviceInfo setCreated(String created) {
-		this.created = created;
-		return this;
-	}
+    public OnvifDeviceInfo setDeviceUrl(String deviceUrl) {
+        this.deviceUrl = deviceUrl;
+        return this;
+    }
 
-	public String expires() {
-		return expires;
-	}
+    public String eventsUrl() {
+        return eventsUrl;
+    }
 
-	public OnvifDeviceInfo setExpires(String expires) {
-		this.expires = expires;
-		return this;
-	}
+    public OnvifDeviceInfo setEventsUrl(String eventsUrl) {
+        this.eventsUrl = eventsUrl;
+        return this;
+    }
 
-	public String username() {
-		return username;
-	}
+    public String imagingUrl() {
+        return imagingUrl;
+    }
 
-	public OnvifDeviceInfo setUsername(String username) {
-		this.username = username;
-		return this;
-	}
+    public OnvifDeviceInfo setImagingUrl(String imagingUrl) {
+        this.imagingUrl = imagingUrl;
+        return this;
+    }
 
-	public String password() {
-		return password;
-	}
+    public String mediaUrl() {
+        return mediaUrl;
+    }
 
-	public OnvifDeviceInfo setPassword(String password) {
-		this.password = password;
-		return this;
-	}
+    public OnvifDeviceInfo setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+        return this;
+    }
 
-	public String systemDateAndTime() {
-		return systemDateAndTime;
-	}
+    public String ptzUrl() {
+        return ptzUrl;
+    }
 
-	public OnvifDeviceInfo setSystemDateAndTime(String systemDateAndTime) {
-		this.systemDateAndTime = systemDateAndTime;
-		return this;
-	}
+    public OnvifDeviceInfo setPtzUrl(String ptzUrl) {
+        this.ptzUrl = ptzUrl;
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return new Gson().toJson(this);
-	}
+
+    public OnvifDeviceInfo setCreated(Date created) {
+        this.created = created;
+        setExpires(new Date(created.getTime() + EXPIRY_TIME_MILLIS));
+        return this;
+    }
+
+    public String expires() {
+        return DATE_FORMATTER.format(expires);
+    }
+
+    public OnvifDeviceInfo setExpires(Date expires) {
+        this.expires = expires;
+        return this;
+    }
+
+    public String username() {
+        return username;
+    }
+
+
+    public OnvifDeviceInfo setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String password() {
+        return password == null ? "" : password;
+    }
+
+
+    public boolean hasCredential() {
+        return password != null && !password.isEmpty();
+    }
+
+    public OnvifDeviceInfo setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public String systemDateAndTime() {
+        return systemDateAndTime;
+    }
+
+    public OnvifDeviceInfo setSystemDateAndTime(String systemDateAndTime) throws ParseException {
+        this.systemDateAndTime = systemDateAndTime;
+        setCreated(DATE_FORMATTER.parse(systemDateAndTime));
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
 }
