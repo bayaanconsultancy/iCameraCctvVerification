@@ -16,37 +16,49 @@ import static com.cs.on.icamera.cctv.data.DataStore.addDiscoveredCctv;
 import static com.cs.on.icamera.cctv.data.DataStore.getDiscoveredCctvCount;
 
 public class OnvifDiscovery {
+	private OnvifDiscovery() {
+	}
+
 	private static final Logger logger = LogManager.getLogger(OnvifDiscovery.class);
 
-	private static final String MULTICAST_IP = "239.255.255.250";
-	private static final Integer MULTICAST_PORT = 3702;
-	private static final int SOCKET_TIMEOUT_MILL_SECONDS = 1000;
-	private static final int DISCOVERY_TIMEOUT_MILL_SECONDS = 3000;
+	private static final int WS_DISCOVERY_TIMEOUT = 4000;
+	private static final int WS_DISCOVERY_SOCKET_TIMEOUT = 1000;
+	private static final int WS_DISCOVERY_MULTICAST_PORT = 3702;
+	private static final String WS_DISCOVERY_MULTICAST_IP_ADDRESS = "239.255.255.250";
 
-	private static final InetAddress MULTICAST_ADDRESS;
-	private static final String SOAP_CONTENT = """
+	private static final byte[] WS_DISCOVERY_PROBE = """
 			<?xml version="1.0" encoding="UTF-8"?>
-			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
-			               xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
-			               xmlns:tds="http://www.onvif.org/ver10/device/wsdl">
-			  <soap:Header>
-			    <wsa:To>urn:uuid:uuid:%s</wsa:To>
-			    <wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/Discovery</wsa:Action>
-			  </soap:Header>
-			  <soap:Body>
-			    <tds:Probe/>
-			  </soap:Body>
-			</soap:Envelope>""".formatted(UUID.randomUUID().toString());
+			<soap:Envelope
+			        xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+			        xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+			        xmlns:tns="http://schemas.xmlsoap.org/ws/2005/04/discovery">
+			    <soap:Header>
+			        <wsa:Action>
+			            http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe
+			        </wsa:Action>
+			        <wsa:MessageID>
+			            uuid:%s
+			        </wsa:MessageID>
+			        <wsa:To>
+			            urn:schemas-xmlsoap-org:ws:2005:04:discovery
+			        </wsa:To>
+			    </soap:Header>
+			    <soap:Body>
+			        <tns:Probe>
+			        </tns:Probe>
+			    </soap:Body>
+			</soap:Envelope>""".formatted(UUID.randomUUID().toString()).getBytes();
 
-	private static String currentInterfaceName;
-
+	private static final InetAddress WS_DISCOVERY_MULTICAST_INET_ADDRESS;
 	static {
 		try {
-			MULTICAST_ADDRESS = InetAddress.getByName(MULTICAST_IP);
+			WS_DISCOVERY_MULTICAST_INET_ADDRESS = InetAddress.getByName(WS_DISCOVERY_MULTICAST_IP_ADDRESS);
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
+	private static String currentInterfaceName;
 
 	/**
 	 * Creates a new MulticastSocket object that listens for incoming datagram
@@ -61,10 +73,10 @@ public class OnvifDiscovery {
 			throws IOException {
 		MulticastSocket socket = new MulticastSocket(port);
 		socket.setNetworkInterface(networkInterface);
-		socket.setSoTimeout(SOCKET_TIMEOUT_MILL_SECONDS);
+		socket.setSoTimeout(WS_DISCOVERY_SOCKET_TIMEOUT);
 		// The following line is commented out because joining the
 		// multicast group is not necessary for this use case.
-		// socket.joinGroup(MULTICAST_ADDRESS);
+		// socket.joinGroup(WS_DISCOVERY_MULTICAST_INET_ADDRESS);
 		return socket;
 	}
 
@@ -72,12 +84,12 @@ public class OnvifDiscovery {
 	 * Sends a datagram packet containing the specified data to the multicast group.
 	 *
 	 * @param socket the MulticastSocket through which the data will be sent
-	 * @param data   the byte array containing the data to be sent
 	 */
-	private static void sendData(MulticastSocket socket, byte[] data) {
+	private static void sendData(MulticastSocket socket) {
 		try {
 			// Create a DatagramPacket to send to the multicast group
-			DatagramPacket packet = new DatagramPacket(data, data.length, MULTICAST_ADDRESS, MULTICAST_PORT);
+			DatagramPacket packet = new DatagramPacket(WS_DISCOVERY_PROBE, WS_DISCOVERY_PROBE.length,
+					WS_DISCOVERY_MULTICAST_INET_ADDRESS, WS_DISCOVERY_MULTICAST_PORT);
 			// Send the packet through the specified socket
 			socket.send(packet);
 		} catch (IOException e) {
@@ -96,9 +108,10 @@ public class OnvifDiscovery {
 	private static DatagramPacket receiveData(MulticastSocket socket) {
 		try {
 			// Create a byte array to store the received data
-			byte[] data = new byte[1024 * 2];
+			byte[] data = new byte[4096];
 			// Create a DatagramPacket to receive the data
-			DatagramPacket packet = new DatagramPacket(data, data.length, MULTICAST_ADDRESS, MULTICAST_PORT);
+			DatagramPacket packet = new DatagramPacket(data, data.length, WS_DISCOVERY_MULTICAST_INET_ADDRESS,
+					WS_DISCOVERY_MULTICAST_PORT);
 			// Receive the data through the specified socket
 			socket.receive(packet);
 			// Return the received packet
@@ -120,19 +133,19 @@ public class OnvifDiscovery {
 	public static void discover() {
 		logger.debug("Starting ONVIF device discovery.");
 		try {
-			int port = Network.getFreeLocalPort();
-			logger.debug("Obtained free local port: {}", port);
+			int localPort = Network.getFreeLocalPort();
+			logger.debug("Obtained free local port: {}", localPort);
 
 			Network.getNetworkInterfaces().forEach(networkInterface -> {
 				currentInterfaceName = networkInterface.getName();
 				logger.info("Checking network interface: {}", networkInterface);
 
-				try (MulticastSocket socket = createMulticastGroupSocket(port, networkInterface)) {
+				try (MulticastSocket socket = createMulticastGroupSocket(localPort, networkInterface)) {
 					// Join the multicast group on the network interface
 					logger.debug("Joined multicast group on interface: {}", currentInterfaceName);
 
 					// Send the discovery data to the multicast group
-					sendData(socket, SOAP_CONTENT.getBytes());
+					sendData(socket);
 					logger.debug("Sent discovery data.");
 
 					// Receive the responses from the ONVIF devices
@@ -140,19 +153,14 @@ public class OnvifDiscovery {
 					long startTime = System.currentTimeMillis();
 
 					// Wait for a while to receive all responses
-					while (System.currentTimeMillis() - startTime < DISCOVERY_TIMEOUT_MILL_SECONDS) {
-						DatagramPacket packet = receiveData(socket);
-						if (packet != null) {
-							packets.add(packet);
-						}
-					}
+					while (System.currentTimeMillis() - startTime < WS_DISCOVERY_TIMEOUT)
+						packets.add(receiveData(socket));
 
 					// Process the responses
-					if (packets.isEmpty()) {
+					if (packets.isEmpty())
 						logger.warn("No ONVIF devices found on interface {}.", currentInterfaceName);
-					} else {
+					else
 						parseResponses(packets);
-					}
 				} catch (IOException e) {
 					logger.error("Error with multicast socket on interface {}:", currentInterfaceName, e);
 				}
@@ -195,7 +203,7 @@ public class OnvifDiscovery {
 			if (address == null)
 				logger.error("Empty ONVIF device service address in response: {}", response);
 			else
-				addDiscoveredCctv(new Cctv().withOnvifAddress(address));
+				addDiscoveredCctv(new Cctv().withOnvifDeviceUrl(address));
 		}
 
 		logger.info("Total discovered ONVIF devices count: {}", getDiscoveredCctvCount());

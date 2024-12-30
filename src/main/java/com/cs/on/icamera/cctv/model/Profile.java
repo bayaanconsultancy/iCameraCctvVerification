@@ -1,6 +1,6 @@
 package com.cs.on.icamera.cctv.model;
 
-public class MediaProfile {
+public class Profile {
 	private String streamUri;
 	private String videoEncoding;
 	private Integer videoWidth;
@@ -56,32 +56,32 @@ public class MediaProfile {
 		this.bitRateLimit = bitRateLimit;
 	}
 
-	public MediaProfile withStreamUri(String streamUri) {
+	public Profile withStreamUri(String streamUri) {
 		this.setStreamUri(streamUri);
 		return this;
 	}
 
-	public MediaProfile withVideoEncoding(String videoEncoding) {
+	public Profile withVideoEncoding(String videoEncoding) {
 		this.setVideoEncoding(videoEncoding);
 		return this;
 	}
 
-	public MediaProfile withVideoWidth(Integer videoWidth) {
+	public Profile withVideoWidth(Integer videoWidth) {
 		this.setVideoWidth(videoWidth);
 		return this;
 	}
 
-	public MediaProfile withVideoHeight(Integer videoHeight) {
+	public Profile withVideoHeight(Integer videoHeight) {
 		this.setVideoHeight(videoHeight);
 		return this;
 	}
 
-	public MediaProfile withFrameRateLimit(Integer frameRateLimit) {
+	public Profile withFrameRateLimit(Integer frameRateLimit) {
 		this.setFrameRateLimit(frameRateLimit);
 		return this;
 	}
 
-	public MediaProfile withBitRateLimit(Integer bitRateLimit) {
+	public Profile withBitRateLimit(Integer bitRateLimit) {
 		this.setBitRateLimit(bitRateLimit);
 		return this;
 	}

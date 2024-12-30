@@ -7,7 +7,7 @@
   <description>This project is a tool to verify the configuration of the of CCTVs with iCamera.</description>
   <inceptionYear>2024</inceptionYear>
   <organization>
-    <name>Tata Consultancy Services</name>
+    <name>Consultancy Services</name>
   </organization>
   <build>
     <plugins>

@@ -1,0 +1,39 @@
+<soap:Envelope
+        xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+        xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+        xmlns:tns="http://schemas.xmlsoap.org/ws/2005/04/discovery">
+    <soap:Header>
+        <wsa:Action>
+            http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe
+        </wsa:Action>
+        <wsa:MessageID>
+            urn:uuid:c032cfdd-c3ca-49dc-820e-ee6696ad63e2
+        </wsa:MessageID>
+        <wsa:To>
+            urn:schemas-xmlsoap-org:ws:2005:04:discovery
+        </wsa:To>
+    </soap:Header>
+    <soap:Body>
+        <tns:Probe/>
+    </soap:Body>
+</soap:Envelope>
+
+
+<Timestamp xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xsi:schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Created>string</Created>
+<Expires>string</Expires>
+</Timestamp>
+<Expires xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xsi:schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">string</Expires>
+
+<Created xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xsi:schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">string</Created>
+
+
+<UsernameToken xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xsi:schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Username xsi:type="KeyIdentifierType" EncodingType="https://www.liquid-technologies.com">string</Username>
+</UsernameToken>
+
+<Security xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xsi:schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+
+<Password xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xsi:schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd schema.xsd" Type="https://www.liquid-technologies.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">string</Password>
+
+<Nonce xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xsi:schemaLocation="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd schema.xsd" xsi:type="BinarySecurityTokenType" ValueType="https://www.liquid-technologies.com" EncodingType="https://www.liquid-technologies.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">string</Nonce>

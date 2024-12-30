@@ -25,7 +25,7 @@ public class HttpRequest {
 		Request request = new Request.Builder().url(url).addHeader("Content-Type", "application/soap+xml")
 				.post(RequestBody.create(body.getBytes())).build();
 
-		try (Response response = HttpClient.get().newCall(request).execute()) {
+		try (Response response = HttpClient1.get().newCall(request).execute()) {
 			String responseString = response.body() == null ? "" : response.body().string();
 			logger.info(" URL: {}, Body: {}, Response: {}, Code: {}", url, body, responseString, response.code());
 
@@ -47,7 +47,7 @@ public class HttpRequest {
 
 		Request request = new Request.Builder().url(url).addHeader("Authorization", authorization).build();
 
-		try (Response response = HttpClient.get().newCall(request).execute()) {
+		try (Response response = HttpClient1.get().newCall(request).execute()) {
 			if (response.isSuccessful()) {
 				return response.body() == null ? new byte[0] : response.body().bytes();
 			} else {

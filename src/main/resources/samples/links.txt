@@ -1,2 +1,9 @@
 https://github.com/bramp/ffmpeg-cli-wrapper
 https://github.com/chengtengfei/onvif-simple
+rtsp://admin:Aminul@24@192.168.0.113:5543/live/channel0
+rtsp://admin:Aminul@24@192.168.0.113:5543/live/channel1
+[ProfileInfo{name='PROFILE_1', token='PROFILE_3401519445', videoInfo=VideoInfo{videoEncoding='H264', videoWidth=1920, videoHeight=1080, frameRateLimit=25, bitrateLimit=2048, streamUri='rtsp://admin:Aminul@24@192.168.0.113:5543/live/channel0'}}, ProfileInfo{name='PROFILE_2', token='PROFILE_3401519446', videoInfo=VideoInfo{videoEncoding='H264', videoWidth=640, videoHeight=360, frameRateLimit=25, bitrateLimit=2048, streamUri='rtsp://admin:Aminul@24@192.168.0.113:5543/live/channel1'}}]
+
+
+Create a Java app to discover CCTVs in local networks and get device and media stream information using ONVIF protocol with password digest authentication.
+

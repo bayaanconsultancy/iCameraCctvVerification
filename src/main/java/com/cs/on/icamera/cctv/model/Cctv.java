@@ -1,28 +1,30 @@
 package com.cs.on.icamera.cctv.model;
 
-import com.google.gson.Gson;
+import static com.cs.on.icamera.cctv.onvif.OnvifResponseParser.parseIpPort;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cs.on.icamera.cctv.onvif.OnvifResponseParser.parseIpPort;
+import com.google.gson.Gson;
 
 public class Cctv {
-	private final List<MediaProfile> profiles;
 	private Long id;
-	private String ip;
 	private int port;
+	private String ip;
 	private String name;
 	private String make;
 	private String model;
 	private String username;
 	private String password;
 	private String serialNumber;
-	private String onvifAddress;
+	private String onvifDeviceUrl;
 	private Boolean insideRoom;
+	private final List<Profile> profiles;
+	private final OnvifDeviceInfo onvifDeviceInfo;
 
 	public Cctv() {
 		this.profiles = new ArrayList<>();
+		this.onvifDeviceInfo = new OnvifDeviceInfo();
 	}
 
 	public Long getId() {
@@ -89,30 +91,30 @@ public class Cctv {
 		this.serialNumber = serialNumber;
 	}
 
-	public String getOnvifAddress() {
-		return onvifAddress;
+	public String getOnvifDeviceUrl() {
+		return onvifDeviceUrl;
 	}
 
-	public void setOnvifAddress(String onvifAddress) {
-		this.onvifAddress = onvifAddress;
-		Object[] ipPort = parseIpPort(onvifAddress);
+	public void setOnvifDeviceUrl(String onvifDeviceUrl) {
+		Object[] ipPort = parseIpPort(onvifDeviceUrl);
 		this.ip = (String) ipPort[0];
 		this.port = (int) ipPort[1];
+		this.onvifDeviceUrl = onvifDeviceUrl;
 	}
 
-	public Boolean getInsideRoom() {
+	public Boolean isInsideRoom() {
 		return insideRoom;
 	}
 
-	public void InsideRoom(Boolean insideRoom) {
+	public void insideRoom(Boolean insideRoom) {
 		this.insideRoom = insideRoom;
 	}
 
-	public List<MediaProfile> getProfiles() {
+	public List<Profile> getProfiles() {
 		return profiles;
 	}
 
-	public void setProfiles(List<MediaProfile> profiles) {
+	public void setProfiles(List<Profile> profiles) {
 		this.profiles.addAll(profiles);
 	}
 
@@ -156,22 +158,22 @@ public class Cctv {
 		return this;
 	}
 
-	public Cctv withOnvifAddress(String onvifAddress) {
-		this.setOnvifAddress(onvifAddress);
+	public Cctv withOnvifDeviceUrl(String onvifAddress) {
+		this.setOnvifDeviceUrl(onvifAddress);
 		return this;
 	}
 
 	public Cctv withInsideRoom(Boolean insideRoom) {
-		this.InsideRoom(insideRoom);
+		this.insideRoom(insideRoom);
 		return this;
 	}
 
-	public Cctv withProfiles(List<MediaProfile> profiles) {
+	public Cctv withProfiles(List<Profile> profiles) {
 		this.setProfiles(profiles);
 		return this;
 	}
 
-	public Cctv addProfile(MediaProfile profile) {
+	public Cctv addProfile(Profile profile) {
 		this.profiles.add(profile);
 		return this;
 	}
@@ -192,5 +194,9 @@ public class Cctv {
 	@Override
 	public String toString() {
 		return new Gson().toJson(this);
+	}
+
+	public OnvifDeviceInfo onvifDeviceInfo() {
+		return onvifDeviceInfo;
 	}
 }

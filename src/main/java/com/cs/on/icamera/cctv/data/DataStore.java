@@ -15,7 +15,7 @@ public class DataStore {
 	private static final Map<String, Cctv> discoveredCctvs = new HashMap<>();
 
 	public static void addDiscoveredCctv(Cctv cctv) {
-		discoveredCctvs.put(cctv.getOnvifAddress(), cctv);
+		discoveredCctvs.put(cctv.getOnvifDeviceUrl(), cctv);
 	}
 
 	public static int getDiscoveredCctvCount() {

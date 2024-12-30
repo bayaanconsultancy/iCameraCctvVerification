@@ -4,16 +4,16 @@ import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
-public class HttpClient {
+public class HttpClient1 {
 	private static final long TIMEOUT_IN_SECONDS = 5;
 	private static volatile OkHttpClient okHttpClient;
 
-	private HttpClient() {
+	private HttpClient1() {
 	}
 
 	public static OkHttpClient get() {
 		if (okHttpClient == null) {
-			synchronized (HttpClient.class) {
+			synchronized (HttpClient1.class) {
 				if (okHttpClient == null) {
 					okHttpClient = createOkHttpClient();
 				}
