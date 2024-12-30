@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tds="http://www.onvif.org/ver10/device/wsdl">
-    <soap:Header>
-        <Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-            <wsse:UsernameToken wsu:Id="usernameToken">
-                <wsse:Username>admin</wsse:Username>
-                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">wgZ1MfbtC+vk8cssrXM2F649LjY=</wsse:Password>
-                <wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">nNOVgi3g+WoXsJYa/aXDaQ==</wsse:Nonce>
-                <wsu:Created>2024-12-30T18:34:32Z</wsu:Created>
-            </wsse:UsernameToken>
-        </Security>
-    </soap:Header>
-    <soap:Body>
-        <tds:GetDeviceInformation/>
-    </soap:Body>
+<soap:Envelope
+	xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:tds="http://www.onvif.org/ver10/device/wsdl">
+	<soap:Header>
+		<Security
+			xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+			xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+			<wsse:UsernameToken wsu:Id="usernameToken">
+				<wsse:Username>admin</wsse:Username>
+				<wsse:Password
+					Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">wgZ1MfbtC+vk8cssrXM2F649LjY=</wsse:Password>
+				<wsse:Nonce
+					EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">nNOVgi3g+WoXsJYa/aXDaQ==</wsse:Nonce>
+				<wsu:Created>2024-12-30T18:34:32Z</wsu:Created>
+			</wsse:UsernameToken>
+		</Security>
+	</soap:Header>
+	<soap:Body>
+		<tds:GetDeviceInformation />
+	</soap:Body>
 </soap:Envelope>
