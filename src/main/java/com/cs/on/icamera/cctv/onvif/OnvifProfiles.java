@@ -6,58 +6,45 @@ import com.cs.on.icamera.cctv.util.HttpSoapClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.cs.on.icamera.cctv.onvif.OnvifSoapMessages.ONVIF_GET_PROFILES;
+import static com.cs.on.icamera.cctv.onvif.OnvifSoapMessages.ONVIF_GET_STREAM_URI;
+
 public class OnvifProfiles {
-    private static final Logger logger = LogManager.getLogger(OnvifProfiles.class);
-    private static final String ONVIF_GET_PROFILES = """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl">
-               <soap:Header>
-                    %s
-               </soap:Header>
-               <soap:Body>
-                  <wsdl:GetProfiles/>
-               </soap:Body>
-            </soap:Envelope>
-            """;
-    private static final String ONVIF_GET_STREAM_URI = """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl">
-               <soap:Header>
-                    %s
-               </soap:Header>
-               <soap:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-                  <wsdl:GetStreamUri xmlns="http://www.onvif.org/ver10/media/wsdl">
-                     <StreamSetup xmlns="http://www.onvif.org/ver10/schema">
-                        <Stream xmlns="http://www.onvif.org/ver10/schema">RTP-Unicast</Stream>
-                        <Transport xmlns="http://www.onvif.org/ver10/schema">
-                           <Protocol>UDP</Protocol>
-                        </Transport>
-                     </StreamSetup>
-                     <ProfileToken>%s</ProfileToken>
-                  </wsdl:GetStreamUri>
-               </soap:Body>
-            </soap:Envelope>
-            """;
+	private static final Logger logger = LogManager.getLogger(OnvifProfiles.class);
 
-    private OnvifProfiles() {
-    }
+	private OnvifProfiles() {
+	}
 
-    public static void get(Cctv cctv) throws OnvifException {
-        try {
-            String profileXml = String.format(ONVIF_GET_PROFILES, cctv.onvifInfo().header());
-            logger.info("Getting profiles for {} with: \n{}", cctv.getOnvifUrl(), profileXml);
+	/**
+	 * Get the profiles for a given Cctv object. The profiles are retrieved using
+	 * the media URL from the Cctv object. The response is parsed and the profiles
+	 * are stored in the Cctv object.
+	 *
+	 * @param cctv the Cctv object to store the profiles in
+	 * @throws OnvifException if there is an error retrieving the profiles
+	 */
+	public static void get(Cctv cctv) throws OnvifException {
+		try {
+			// Get the profiles from the media URL
+			String profileXml = String.format(ONVIF_GET_PROFILES, cctv.onvifInfo().header());
+			logger.info("Getting profiles for {} with: \n{}", cctv.getOnvifUrl(), profileXml);
 
-            cctv.setProfiles(OnvifResponseParser.parseProfiles(HttpSoapClient.postXml(cctv.onvifInfo().mediaUrl(), profileXml)));
+			// Parse the response and store the profiles in the Cctv object
+			cctv.setProfiles(
+					OnvifResponseParser.parseProfiles(HttpSoapClient.postXml(cctv.onvifInfo().mediaUrl(), profileXml)));
 
-            for (Profile profile : cctv.getProfiles()) {
-                String streamXml = String.format(ONVIF_GET_STREAM_URI, cctv.onvifInfo().header(), profile.token());
-                logger.info("Getting stream URI for {} with \n{}", profile.name(), streamXml);
+			// Get the stream URI for each profile
+			for (Profile profile : cctv.getProfiles()) {
+				String streamXml = String.format(ONVIF_GET_STREAM_URI, cctv.onvifInfo().header(), profile.token());
+				logger.info("Getting stream URI for {} with \n{}", profile.name(), streamXml);
 
-                profile.setStreamUri(OnvifResponseParser.parseStreamUri(HttpSoapClient.postXml(cctv.onvifInfo().mediaUrl(), streamXml)));
-            }
-        } catch (Exception e) {
-            logger.error("Error getting profiles for {} as {}", cctv, e.getMessage());
-            throw new OnvifException(e);
-        }
-    }
+				// Parse the response and store the stream URI in the profile
+				profile.setStreamUri(OnvifResponseParser
+						.parseStreamUri(HttpSoapClient.postXml(cctv.onvifInfo().mediaUrl(), streamXml)));
+			}
+		} catch (Exception e) {
+			logger.error("Error getting profiles for {} as {}", cctv, e.getMessage());
+			throw new OnvifException(e);
+		}
+	}
 }

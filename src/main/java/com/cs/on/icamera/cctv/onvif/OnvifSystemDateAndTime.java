@@ -5,20 +5,13 @@ import com.cs.on.icamera.cctv.util.HttpSoapClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.cs.on.icamera.cctv.onvif.OnvifSoapMessages.ONVIF_GET_DATETIME;
+
 public class OnvifSystemDateAndTime {
 	private OnvifSystemDateAndTime() {
 	}
 
 	private static final Logger logger = LogManager.getLogger(OnvifSystemDateAndTime.class);
-
-	private static final String ONVIF_GET_DATETIME = """
-			<?xml version="1.0" encoding="UTF-8"?>
-			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl">
-			   <soap:Header/>
-			   <soap:Body>
-			      <wsdl:GetSystemDateAndTime/>
-			   </soap:Body>
-			</soap:Envelope>""";
 
 	/**
 	 * Sends a SOAP request to the ONVIF device to retrieve its current system date

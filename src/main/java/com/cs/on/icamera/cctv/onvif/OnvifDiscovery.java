@@ -10,46 +10,19 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static com.cs.on.icamera.cctv.data.DataStore.addDiscoveredCctv;
-import static com.cs.on.icamera.cctv.data.DataStore.getDiscoveredCctvCount;
+import static com.cs.on.icamera.cctv.onvif.OnvifSoapMessages.WS_DISCOVERY_PROBE;
 
 public class OnvifDiscovery {
-	private OnvifDiscovery() {
-	}
-
 	private static final Logger logger = LogManager.getLogger(OnvifDiscovery.class);
-
 	private static final int WS_DISCOVERY_TIMEOUT = 4000;
 	private static final int WS_DISCOVERY_SOCKET_TIMEOUT = 1000;
 	private static final int WS_DISCOVERY_MULTICAST_PORT = 3702;
 	private static final String WS_DISCOVERY_MULTICAST_IP_ADDRESS = "239.255.255.250";
-
-	private static final byte[] WS_DISCOVERY_PROBE = """
-			<?xml version="1.0" encoding="UTF-8"?>
-			<soap:Envelope
-			        xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
-			        xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
-			        xmlns:tns="http://schemas.xmlsoap.org/ws/2005/04/discovery">
-			    <soap:Header>
-			        <wsa:Action>
-			            http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe
-			        </wsa:Action>
-			        <wsa:MessageID>
-			            uuid:%s
-			        </wsa:MessageID>
-			        <wsa:To>
-			            urn:schemas-xmlsoap-org:ws:2005:04:discovery
-			        </wsa:To>
-			    </soap:Header>
-			    <soap:Body>
-			        <tns:Probe>
-			        </tns:Probe>
-			    </soap:Body>
-			</soap:Envelope>""".formatted(UUID.randomUUID().toString()).getBytes();
-
 	private static final InetAddress WS_DISCOVERY_MULTICAST_INET_ADDRESS;
+	private static String currentInterfaceName;
+
 	static {
 		try {
 			WS_DISCOVERY_MULTICAST_INET_ADDRESS = InetAddress.getByName(WS_DISCOVERY_MULTICAST_IP_ADDRESS);
@@ -58,7 +31,8 @@ public class OnvifDiscovery {
 		}
 	}
 
-	private static String currentInterfaceName;
+	private OnvifDiscovery() {
+	}
 
 	/**
 	 * Sends a datagram packet containing the specified data to the multicast group.
@@ -153,10 +127,11 @@ public class OnvifDiscovery {
 	}
 
 	/**
-	 * Parses the responses received from ONVIF devices, extracts their service addresses,
-	 * and adds them to the discovered CCTV list.
+	 * Parses the responses received from ONVIF devices, extracts their service
+	 * addresses, and adds them to the discovered CCTV list.
 	 *
-	 * @param packets The list of DatagramPacket objects containing the responses from ONVIF devices.
+	 * @param packets The list of DatagramPacket objects containing the responses
+	 *                from ONVIF devices.
 	 */
 	private static void parseResponses(List<DatagramPacket> packets) {
 		int discoveredCount = 0;
@@ -182,7 +157,8 @@ public class OnvifDiscovery {
 				}
 			} catch (DocumentException e) {
 				// Log an error if there is an issue parsing the response
-				logger.error("Error parsing ONVIF device service address in response: {} as: {}", response, e.getMessage());
+				logger.error("Error parsing ONVIF device service address in response: {} as: {}", response,
+						e.getMessage());
 			}
 		}
 
