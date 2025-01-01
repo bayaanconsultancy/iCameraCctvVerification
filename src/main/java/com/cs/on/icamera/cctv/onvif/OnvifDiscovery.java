@@ -1,5 +1,6 @@
 package com.cs.on.icamera.cctv.onvif;
 
+import com.cs.on.icamera.cctv.data.DataStore;
 import com.cs.on.icamera.cctv.model.Cctv;
 import com.cs.on.icamera.cctv.util.Network;
 import org.apache.logging.log4j.LogManager;
@@ -90,40 +91,61 @@ public class OnvifDiscovery {
 			int localPort = Network.getFreeLocalPort();
 			logger.debug("Obtained free local port: {}", localPort);
 
-			Network.getNetworkInterfaces().forEach(networkInterface -> {
+			for (NetworkInterface networkInterface : Network.getNetworkInterfaces()) {
 				currentInterfaceName = networkInterface.getName();
 				logger.info("Discovering ONVIF devices on interface {}", networkInterface);
 
-				try (MulticastSocket socket = new MulticastSocket(localPort)) {
-					socket.setNetworkInterface(networkInterface);
-					socket.setSoTimeout(WS_DISCOVERY_SOCKET_TIMEOUT);
-					logger.debug("Created multicast socket on interface {}", currentInterfaceName);
-
-					// Send the discovery data to the multicast group
-					sendData(socket);
-					logger.debug("Sent discovery packets to multicast group on interface {}", currentInterfaceName);
-
-					// Receive the responses from the ONVIF devices
-					List<DatagramPacket> packets = new ArrayList<>();
-					long startTime = System.currentTimeMillis();
-
-					// Wait for a while to receive all responses
-					while (System.currentTimeMillis() - startTime < WS_DISCOVERY_TIMEOUT)
-						packets.add(receiveData(socket));
-
-					// Process the responses
-					if (packets.isEmpty())
-						logger.warn("No ONVIF devices found on interface {}.", currentInterfaceName);
-					else
-						parseResponses(packets);
-				} catch (IOException e) {
-					logger.error("Error with multicast socket on interface {}:", currentInterfaceName, e);
-				}
-			});
+				discover(networkInterface, localPort);
+			}
 		} catch (IOException e) {
 			logger.error("Error during device discovery:", e);
 		}
 		logger.debug("ONVIF device discovery completed.");
+	}
+
+	/**
+	 * Performs ONVIF device discovery on a single network interface.
+	 * <p>
+	 * This method creates a MulticastSocket, sends the discovery data to the
+	 * multicast group, waits for a while to receive all responses, and then
+	 * processes the responses.
+	 * <p>
+	 * If an error occurs while creating the MulticastSocket, it logs an error
+	 * message and returns.
+	 * <p>
+	 * If no ONVIF devices are found, it logs a warning message.
+	 *
+	 * @param networkInterface
+	 *            The network interface to discover ONVIF devices on.
+	 * @param localPort
+	 *            The free local port to bind the MulticastSocket to.
+	 */
+	private static void discover(NetworkInterface networkInterface, int localPort) {
+		try (MulticastSocket socket = new MulticastSocket(localPort)) {
+			socket.setNetworkInterface(networkInterface);
+			socket.setSoTimeout(WS_DISCOVERY_SOCKET_TIMEOUT);
+			logger.debug("Created multicast socket on interface {}", currentInterfaceName);
+
+			// Send the discovery data to the multicast group
+			sendData(socket);
+			logger.debug("Sent discovery packets to multicast group on interface {}", currentInterfaceName);
+
+			// Receive the responses from the ONVIF devices
+			List<DatagramPacket> packets = new ArrayList<>();
+			long startTime = System.currentTimeMillis();
+
+			// Wait for a while to receive all responses
+			while (System.currentTimeMillis() - startTime < WS_DISCOVERY_TIMEOUT)
+				packets.add(receiveData(socket));
+
+			// Process the responses
+			if (packets.isEmpty())
+				logger.warn("No ONVIF devices found on interface {}.", currentInterfaceName);
+			else
+				parseResponses(packets);
+		} catch (IOException e) {
+			logger.error("Error with multicast socket on interface {}:", currentInterfaceName, e);
+		}
 	}
 
 	/**
@@ -163,6 +185,6 @@ public class OnvifDiscovery {
 		}
 
 		// Log the total number of discovered ONVIF devices
-		logger.info("Total discovered ONVIF devices count: {}", discoveredCount);
+		logger.info("Total discovered ONVIF devices count: {}/{}", DataStore.getDiscoveredCctvCount(), discoveredCount);
 	}
 }
