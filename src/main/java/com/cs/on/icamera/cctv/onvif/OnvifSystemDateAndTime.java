@@ -32,10 +32,10 @@ public class OnvifSystemDateAndTime {
 	public static void get(Cctv cctv) throws OnvifException {
 		try {
 			// Send the SOAP request and get the response
-			String response = HttpSoapClient.postXml(cctv.getOnvifDeviceUrl(), ONVIF_GET_DATETIME);
+			String response = HttpSoapClient.postXml(cctv.getOnvifUrl(), ONVIF_GET_DATETIME);
 
 			// Parse the response and store the system date and time in the Cctv object
-			cctv.onvifDeviceInfo().setSystemDateAndTime(OnvifResponseParser.parseSystemDateAndTime(response));
+			cctv.onvifInfo().setSystemDateAndTime(OnvifResponseParser.parseSystemDateAndTime(response));
 		} catch (Exception e) {
 			logger.error("Error getting system date and time for {} as {}", cctv, e.getMessage());
 			throw new OnvifException(e);

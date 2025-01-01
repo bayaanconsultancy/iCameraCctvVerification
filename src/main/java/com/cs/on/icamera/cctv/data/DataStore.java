@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 public class DataStore {
+	private DataStore() {}
 	private static final Logger logger = LogManager.getLogger(DataStore.class);
 
 	private static final Map<String, Cctv> discoveredCctvs = new HashMap<>();
 
 	public static void addDiscoveredCctv(Cctv cctv) {
-		discoveredCctvs.put(cctv.getOnvifDeviceUrl(), cctv);
+		discoveredCctvs.put(cctv.getOnvifUrl(), cctv);
 	}
 
 	public static int getDiscoveredCctvCount() {
@@ -32,15 +33,8 @@ public class DataStore {
 		} else {
 			logger.info("Discovered CCTVs: ");
 			for (Cctv cctv : discoveredCctvs.values()) {
-				logger.info(cctv.toString());
+				logger.info("-- {}", cctv);
 			}
-		}
-	}
-
-	public static void setUsernamePasswordForDiscoveredCctvs(String username, String password) {
-		for (Cctv cctv : discoveredCctvs.values()) {
-			cctv.setUsername(username);
-			cctv.setPassword(password);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package com.cs.on.icamera.cctv.onvif;
 
+import com.cs.on.icamera.cctv.model.Profile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -8,13 +9,17 @@ import org.dom4j.Element;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class OnvifResponseParser {
-    private OnvifResponseParser() {}
-
     private static final Logger logger = LogManager.getLogger(OnvifResponseParser.class);
+
+    private OnvifResponseParser() {
+    }
 
     public static Object[] parseIpPort(String url) {
         try {
@@ -26,8 +31,8 @@ public class OnvifResponseParser {
         }
     }
 
-    public static String parseOnvifAddress(String xmlContent) throws DocumentException {
-        return DocumentHelper.parseText(xmlContent.trim()).getRootElement().element("Body").element("ProbeMatches").element("ProbeMatch").element("XAddrs").getTextTrim();
+    public static String parseOnvifAddress(String xml) throws DocumentException {
+        return DocumentHelper.parseText(xml.trim()).getRootElement().element("Body").element("ProbeMatches").element("ProbeMatch").element("XAddrs").getTextTrim();
     }
 
     public static String parseMediaUrl(String xml) throws DocumentException {
@@ -54,24 +59,65 @@ public class OnvifResponseParser {
         return String.format("%04d-%02d-%02dT%02d:%02d:%02dZ", year, month, day, hour, minute, second);
     }
 
-    public static List<String> parseProfiles(String xml) throws DocumentException, OnvifException {
-        logger.info("Parsing profiles: {}", xml);
+    private static Element getBody(String xml) throws DocumentException, OnvifException {
         Element body = DocumentHelper.parseText(xml).getRootElement().element("Body");
-        checkForFault(body);
-        return new ArrayList<>();
-    }
 
-    private static void checkForFault(Element body) throws OnvifException {
         if (body == null) {
             throw new OnvifException("No body in response");
         }
+
         Element fault = body.element("Fault");
         if (fault != null) {
             throw new OnvifException(fault.element("Reason").element("Text").getTextTrim());
         }
+
+        return body;
     }
 
-    public static void parseOnvifDeviceInformation(String xml) {
-        logger.info("Parsing device information: {}", xml);
+    public static List<Profile> parseProfiles(String xml) throws DocumentException, OnvifException {
+        logger.info("Parsing profiles: \n{}", xml);
+        List<Profile> profiles = new ArrayList<>();
+        List<Element> elements = getBody(xml).element("GetProfilesResponse").elements("Profiles");
+
+        for (Element element : elements) {
+            Profile profile = new Profile();
+            profile.setName(element.element("Name").getTextTrim());
+            profile.setToken(element.attributeValue("token"));
+
+            Element vec = element.element("VideoEncoderConfiguration");
+            if (vec != null) {
+                profile.setEncoding(vec.element("Encoding").getTextTrim());
+                profile.setResolutionWidth(Integer.parseInt(vec.element("Resolution").element("Width").getTextTrim()));
+                profile.setResolutionHeight(Integer.parseInt(vec.element("Resolution").element("Height").getTextTrim()));
+                profile.setQuality(Integer.parseInt(vec.element("Quality").getTextTrim()));
+                Element rateControl = vec.element("RateControl");
+                profile.setFrameRate(Integer.parseInt(rateControl.element("FrameRateLimit").getTextTrim()));
+                profile.setEncodingInterval(Integer.parseInt(rateControl.element("EncodingInterval").getTextTrim()));
+                profile.setBitrate(Integer.parseInt(rateControl.element("BitrateLimit").getTextTrim()));
+            }
+
+            profiles.add(profile);
+        }
+        return profiles;
+    }
+
+
+
+    public static String parseStreamUri(String xml) throws DocumentException, OnvifException {
+        logger.info("Parsing stream URI: \n{}", xml);
+        String uri = getBody(xml).element("GetStreamUriResponse").element("MediaUri").element("Uri").getTextTrim();
+        return URLDecoder.decode(uri, StandardCharsets.UTF_8);
+
+    }
+
+    public static List<String> parseOnvifDeviceInformation(String xml) throws DocumentException, OnvifException {
+        logger.info("Parsing device information: \n{}", xml);
+        Element device = getBody(xml).element("GetDeviceInformationResponse");
+
+        String manufacturer = device.element("Manufacturer").getTextTrim();
+        String model = device.element("Model").getTextTrim();
+        String serialNumber = device.element("SerialNumber").getTextTrim();
+
+        return Arrays.asList(manufacturer, model, serialNumber);
     }
 }

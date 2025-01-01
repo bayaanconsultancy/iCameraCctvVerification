@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class OnvifEnquiry {
+	private OnvifEnquiry() {}
 
 	private static final Logger logger = LogManager.getLogger(OnvifEnquiry.class);
 

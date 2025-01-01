@@ -12,8 +12,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class OnvifDeviceInfo {
-    private static final long EXPIRY_TIME_MILLIS = 3600000;
+public class OnvifInfo {
+    private static final long EXPIRY_TIME_MILLIS = 300000;
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     static {
@@ -33,7 +33,7 @@ public class OnvifDeviceInfo {
     private String password;
     private String systemDateAndTime;
 
-    public OnvifDeviceInfo() {
+    public OnvifInfo() {
         this.nonce = generateNonce();
         this.created = new Date();
         this.expires = new Date(created.getTime() + EXPIRY_TIME_MILLIS);
@@ -84,7 +84,7 @@ public class OnvifDeviceInfo {
         return analyticsUrl;
     }
 
-    public OnvifDeviceInfo setAnalyticsUrl(String analyticsUrl) {
+    public OnvifInfo setAnalyticsUrl(String analyticsUrl) {
         this.analyticsUrl = analyticsUrl;
         return this;
     }
@@ -93,7 +93,7 @@ public class OnvifDeviceInfo {
         return deviceUrl;
     }
 
-    public OnvifDeviceInfo setDeviceUrl(String deviceUrl) {
+    public OnvifInfo setDeviceUrl(String deviceUrl) {
         this.deviceUrl = deviceUrl;
         return this;
     }
@@ -102,7 +102,7 @@ public class OnvifDeviceInfo {
         return eventsUrl;
     }
 
-    public OnvifDeviceInfo setEventsUrl(String eventsUrl) {
+    public OnvifInfo setEventsUrl(String eventsUrl) {
         this.eventsUrl = eventsUrl;
         return this;
     }
@@ -111,7 +111,7 @@ public class OnvifDeviceInfo {
         return imagingUrl;
     }
 
-    public OnvifDeviceInfo setImagingUrl(String imagingUrl) {
+    public OnvifInfo setImagingUrl(String imagingUrl) {
         this.imagingUrl = imagingUrl;
         return this;
     }
@@ -120,7 +120,7 @@ public class OnvifDeviceInfo {
         return mediaUrl;
     }
 
-    public OnvifDeviceInfo setMediaUrl(String mediaUrl) {
+    public OnvifInfo setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
         return this;
     }
@@ -129,13 +129,13 @@ public class OnvifDeviceInfo {
         return ptzUrl;
     }
 
-    public OnvifDeviceInfo setPtzUrl(String ptzUrl) {
+    public OnvifInfo setPtzUrl(String ptzUrl) {
         this.ptzUrl = ptzUrl;
         return this;
     }
 
 
-    public OnvifDeviceInfo setCreated(Date created) {
+    public OnvifInfo setCreated(Date created) {
         this.created = created;
         setExpires(new Date(created.getTime() + EXPIRY_TIME_MILLIS));
         return this;
@@ -145,7 +145,7 @@ public class OnvifDeviceInfo {
         return DATE_FORMATTER.format(expires);
     }
 
-    public OnvifDeviceInfo setExpires(Date expires) {
+    public OnvifInfo setExpires(Date expires) {
         this.expires = expires;
         return this;
     }
@@ -155,7 +155,7 @@ public class OnvifDeviceInfo {
     }
 
 
-    public OnvifDeviceInfo setUsername(String username) {
+    public OnvifInfo setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -169,7 +169,7 @@ public class OnvifDeviceInfo {
         return password != null && !password.isEmpty();
     }
 
-    public OnvifDeviceInfo setPassword(String password) {
+    public OnvifInfo setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -178,7 +178,7 @@ public class OnvifDeviceInfo {
         return systemDateAndTime;
     }
 
-    public OnvifDeviceInfo setSystemDateAndTime(String systemDateAndTime) throws ParseException {
+    public OnvifInfo setSystemDateAndTime(String systemDateAndTime) throws ParseException {
         this.systemDateAndTime = systemDateAndTime;
         setCreated(DATE_FORMATTER.parse(systemDateAndTime));
         return this;

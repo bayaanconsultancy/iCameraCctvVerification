@@ -17,14 +17,14 @@ public class Cctv {
 	private String username;
 	private String password;
 	private String serialNumber;
-	private String onvifDeviceUrl;
+	private String onvifUrl;
 	private Boolean insideRoom;
 	private final List<Profile> profiles;
-	private final OnvifDeviceInfo onvifDeviceInfo;
+	private final OnvifInfo onvifInfo;
 
 	public Cctv() {
 		this.profiles = new ArrayList<>();
-		this.onvifDeviceInfo = new OnvifDeviceInfo();
+		this.onvifInfo = new OnvifInfo();
 	}
 
 	public Long getId() {
@@ -91,15 +91,15 @@ public class Cctv {
 		this.serialNumber = serialNumber;
 	}
 
-	public String getOnvifDeviceUrl() {
-		return onvifDeviceUrl;
+	public String getOnvifUrl() {
+		return onvifUrl;
 	}
 
-	public void setOnvifDeviceUrl(String onvifDeviceUrl) {
-		Object[] ipPort = parseIpPort(onvifDeviceUrl);
+	public void setOnvifUrl(String onvifUrl) {
+		Object[] ipPort = parseIpPort(onvifUrl);
 		this.ip = (String) ipPort[0];
 		this.port = (int) ipPort[1];
-		this.onvifDeviceUrl = onvifDeviceUrl;
+		this.onvifUrl = onvifUrl;
 	}
 
 	public Boolean isInsideRoom() {
@@ -159,7 +159,7 @@ public class Cctv {
 	}
 
 	public Cctv withOnvifDeviceUrl(String onvifAddress) {
-		this.setOnvifDeviceUrl(onvifAddress);
+		this.setOnvifUrl(onvifAddress);
 		return this;
 	}
 
@@ -196,15 +196,15 @@ public class Cctv {
 		return new Gson().toJson(this);
 	}
 
-	public OnvifDeviceInfo onvifDeviceInfo() {
-		return onvifDeviceInfo;
+	public OnvifInfo onvifInfo() {
+		return onvifInfo;
 	}
 
 	public void setOnvifUsername(String username) {
-		this.onvifDeviceInfo.setUsername(username);
+		this.onvifInfo.setUsername(username);
 	}
 
 	public void setOnvifPassword(String password) {
-		this.onvifDeviceInfo.setPassword(password);
+		this.onvifInfo.setPassword(password);
 	}
 }
