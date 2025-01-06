@@ -41,7 +41,7 @@ public class OnvifEnquiry {
 			logger.info("Got ONVIF details for {}", cctv);
 		} catch (Exception e) {
 			// Set the exception in the Cctv object
-			cctv.setException(e);
+			cctv.setError(e);
 
 			// Log an error if there was a problem getting the ONVIF details
 			logger.error("ERROR GETTING ONVIF DETAILS FOR {}", cctv, e);

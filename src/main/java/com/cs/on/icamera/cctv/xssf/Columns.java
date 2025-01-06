@@ -4,12 +4,12 @@ public enum Columns {
     CCTV_NAME(1, "CCTV Name", String.class, "getName", "setName"),
     CCTV_IP(2, "IP Address", String.class, "getIp", "setIp"),
     RTSP_PORT(3, "RTSP Port", Integer.class, "getPort", "setPort"),
-    INSIDE_ROOM(4, "Inside Room", Boolean.class, "getInsideRoom", "setInsideRoom"),
-    RTSP_MAIN_URL(5, "Main Stream URL", String.class, "getOnvifUrl", "setOnvifUrl"),
-    RTSP_SUB_URL(6, "Sub Stream URL", String.class, "getModel", "setModel"),
-    MAKE_MODEL(7, "Make - Model", String.class, "getMake", "setMake"),
+    INSIDE_ROOM(4, "Inside Room", Boolean.class, "isInsideRoom", "insideRoom"),
+    RTSP_MAIN_URL(5, "Main Stream URL", String.class, "getMainStreamUrl", "setMainStreamUrl"),
+    RTSP_SUB_URL(6, "Sub Stream URL", String.class, "getSubStreamUrl", "setSubStreamUrl"),
+    MAKE_MODEL(7, "Make - Model", String.class, "getMakeModel", "setMakeModel"),
     SERIAL_N0(8, "Serial No", String.class, "getSerialNumber", "setSerialNumber"),
-    ERROR(9, "Error Message", String.class, "getErrorMessage", "setErrorMessage");
+    ERROR(9, "Error Message", String.class, "getError", "setError");
 
     private final int index;
     private final String name;

@@ -55,4 +55,22 @@ public class UrlParser {
             throw new OnvifException(e);
         }
     }
+
+    public static String addCredentialsToRtspUrl(String rtspUrl, String username, String password) throws OnvifException {
+        try {
+            URI uri = new URI(rtspUrl);
+            String userInfo = username + ":" + password;
+            return new URI(
+                    uri.getScheme(),
+                    userInfo,
+                    uri.getHost(),
+                    uri.getPort(),
+                    uri.getPath(),
+                    uri.getQuery(),
+                    uri.getFragment()).toString();
+        } catch (URISyntaxException e) {
+            logger.error("Error adding credentials to RTSP URL {} as: {}", rtspUrl, e.getMessage());
+            throw new OnvifException(e);
+        }
+    }
 }
