@@ -17,8 +17,8 @@ import static com.cs.on.icamera.cctv.onvif.OnvifSoapMessages.WS_DISCOVERY_PROBE;
 
 public class OnvifDiscovery {
 	private static final Logger logger = LogManager.getLogger(OnvifDiscovery.class);
-	private static final int WS_DISCOVERY_TIMEOUT = 4000;
-	private static final int WS_DISCOVERY_SOCKET_TIMEOUT = 1000;
+	private static final int WS_DISCOVERY_TIMEOUT = 8000;
+	private static final int WS_DISCOVERY_SOCKET_TIMEOUT = 4000;
 	private static final int WS_DISCOVERY_MULTICAST_PORT = 3702;
 	private static final String WS_DISCOVERY_MULTICAST_IP_ADDRESS = "239.255.255.250";
 	private static final InetAddress WS_DISCOVERY_MULTICAST_INET_ADDRESS;
@@ -87,18 +87,18 @@ public class OnvifDiscovery {
 	 */
 	public static void discover() {
 		logger.debug("Starting ONVIF device discovery.");
-		try {
-			int localPort = Network.getFreeLocalPort();
-			logger.debug("Obtained free local port: {}", localPort);
 
-			for (NetworkInterface networkInterface : Network.getNetworkInterfaces()) {
-				currentInterfaceName = networkInterface.getName();
-				logger.info("Discovering ONVIF devices on interface {}", networkInterface);
+		System.setProperty("java.net.preferIPv4Stack", "true");
 
-				discover(networkInterface, localPort);
+		for (NetworkInterface networkInterface : Network.getNetworkInterfaces()) {
+			currentInterfaceName = networkInterface.getName();
+			logger.info("Discovering ONVIF devices on interface {}", networkInterface);
+
+			try {
+				discover(networkInterface, Network.getFreeLocalPort());
+			} catch (IOException e) {
+				logger.error("Error discovering ONVIF devices on interface {}", networkInterface, e);
 			}
-		} catch (IOException e) {
-			logger.error("Error during device discovery:", e);
 		}
 		logger.debug("ONVIF device discovery completed.");
 	}

@@ -22,60 +22,62 @@ public class OnvifResponseParser {
 	}
 
 	/**
-	 * Given a URL, extracts the IP address and port.
-	 * 
-	 * @param url the ONVIF device service address to parse
-	 * @return an array of two elements, the first being the IP address and the
-	 *         second being the port, or {"0.0.0.0", 80} if the URL can not be
-	 *         parsed
-	 */
-	public static Object[] parseIpPort(String url) {
-		try {
-			URI uri = new URI(url);
-			return new Object[] { uri.getHost(), uri.getPort() };
-		} catch (URISyntaxException e) {
-			logger.error("Error parsing ONVIF device service address in response {} as: {}", url, e.getMessage());
-			return new Object[] { "0.0.0.0", 80 };
-		}
-	}
-
-	/**
-	 * Given a ProbeMatch ONVIF response, extracts the XAddrs element text content.
-	 * 
-	 * @param xml the ONVIF response to parse
-	 * @return the XAddrs element text content
-	 * @throws DocumentException if the XML can not be parsed
-	 */
-	public static String parseOnvifAddress(String xml) throws DocumentException {
-		return DocumentHelper.parseText(xml).getRootElement().element("Body").element("ProbeMatches")
-				.element("ProbeMatch").element("XAddrs").getTextTrim();
-	}
-
-	/**
-	 * Parses the given XML to extract the device URL from the
-	 * GetCapabilitiesResponse.
+	 * Extracts the first "normal" hostname-based URL from the response.
+	 * <p>
+	 * Some devices may respond with multiple URLs, such as a hostname and a
+	 * link-local address. This method will extract the first URL that has
+	 * a valid hostname and not a IPv6 address.
 	 *
-	 * @param xml the ONVIF response containing the device capabilities
-	 * @return the device URL located in the XAddr element of the Device section
+	 * @param xml the response from the ONVIF device
+	 * @return the first hostname-based URL from the response
 	 * @throws DocumentException if the XML cannot be parsed
 	 */
-	public static String parseDeviceUrl(String xml) throws DocumentException {
-		// Parse the XML document and navigate to the Device XAddr element
-		return DocumentHelper.parseText(xml).getRootElement().element("Body").element("GetCapabilitiesResponse")
-				.element("Capabilities").element("Device").element("XAddr").getTextTrim();
+	public static String parseOnvifAddress(String xml) throws DocumentException {
+		/*
+		 * Example:
+		 * 1. <d:XAddrs>http://172.16.0.27/onvif/device_service
+		 * http://[fe80::26b1:5ff:fe39:8d91]/onvif/device_service</d:XAddrs>
+		 * 2. <d:XAddrs>http://192.168.0.113:8000/onvif/device_service</d:XAddrs>
+		 */
+		String[] urls = DocumentHelper.parseText(xml).getRootElement().element("Body")
+				.element("ProbeMatches").element("ProbeMatch").element("XAddrs").getTextTrim().split("\\s+");
+
+		for (String url : urls) {
+			try {
+				URI uri = new URI(url);
+				if (uri.getHost() != null && !uri.getHost().contains(":")) {
+					return url;
+				}
+			} catch (URISyntaxException e) {
+				logger.warn("Error extracting hostname from URL {} as: {}", url, e.getMessage());
+			}
+		}
+		return urls[0];
 	}
 
 	/**
-	 * Given a GetCapabilitiesResponse ONVIF response, extracts the XAddr element
-	 * text content in the Media Capabilities section.
-	 * 
-	 * @param xml the ONVIF response to parse
-	 * @return the XAddr element text content
-	 * @throws DocumentException if the XML can not be parsed
+	 * Parses the given XML string to extract the device and media URLs
+	 * from the GetCapabilitiesResponse.
+	 *
+	 * @param xml the XML response from the ONVIF device
+	 * @return an array containing the media and device URLs
+	 * @throws DocumentException if the XML cannot be parsed
 	 */
-	public static String parseMediaUrl(String xml) throws DocumentException {
-		return DocumentHelper.parseText(xml).getRootElement().element("Body").element("GetCapabilitiesResponse")
-				.element("Capabilities").element("Media").element("XAddr").getTextTrim();
+	public static String[] parseDeviceAndMediaUrl(String xml) throws DocumentException {
+		logger.info("Parsing device and media URL from response: \n{}", xml);
+
+		// Parse the XML to get the Capabilities element
+		Element capabilities = DocumentHelper.parseText(xml).getRootElement()
+				.element("Body")
+				.element("GetCapabilitiesResponse")
+				.element("Capabilities");
+
+		// Extract the Media and Device URLs from the Capabilities element
+		String deviceUrl = capabilities.element("Device").element("XAddr").getTextTrim();
+		String mediaUrl = capabilities.element("Media").element("XAddr").getTextTrim();
+
+		// Return the extracted URLs as an array
+		return new String[] { deviceUrl, mediaUrl };
 	}
 
 	/**
@@ -108,6 +110,7 @@ public class OnvifResponseParser {
 	 * @throws DocumentException if the XML can not be parsed
 	 */
 	public static String parseSystemDateAndTime(String xml) throws DocumentException {
+		logger.info("Parsing system date and time from response: \n{}", xml);
 		// Parse the XML document and navigate to the UTCDateTime element
 		Element dateTime = DocumentHelper.parseText(xml).getRootElement().element("Body")
 				.element("GetSystemDateAndTimeResponse").element("SystemDateAndTime").element("UTCDateTime");
@@ -163,7 +166,7 @@ public class OnvifResponseParser {
 	 *                           body contains a Fault element
 	 */
 	public static List<Profile> parseProfiles(String xml) throws DocumentException, OnvifException {
-		logger.info("Parsing profiles: \n{}", xml);
+		logger.info("Parsing profiles from response: \n{}", xml);
 		List<Profile> profiles = new ArrayList<>();
 		List<Element> elements = getBody(xml).element("GetProfilesResponse").elements("Profiles");
 
@@ -174,13 +177,11 @@ public class OnvifResponseParser {
 
 			Element vec = element.element("VideoEncoderConfiguration");
 			if (vec != null) {
-				// Extract the video encoder configuration from the VideoEncoderConfiguration
-				// element
 				profile.setEncoding(vec.element("Encoding").getTextTrim());
 				profile.setResolutionWidth(Integer.parseInt(vec.element("Resolution").element("Width").getTextTrim()));
 				profile.setResolutionHeight(
 						Integer.parseInt(vec.element("Resolution").element("Height").getTextTrim()));
-				profile.setQuality(Integer.parseInt(vec.element("Quality").getTextTrim()));
+				profile.setQuality(Float.parseFloat(vec.element("Quality").getTextTrim()));
 				Element rateControl = vec.element("RateControl");
 				profile.setFrameRate(Integer.parseInt(rateControl.element("FrameRateLimit").getTextTrim()));
 				profile.setEncodingInterval(Integer.parseInt(rateControl.element("EncodingInterval").getTextTrim()));
@@ -203,9 +204,10 @@ public class OnvifResponseParser {
 	 *                           body contains a Fault element
 	 */
 	public static String parseStreamUri(String xml) throws DocumentException, OnvifException {
-		logger.info("Parsing stream URI: \n{}", xml);
-		String uri = getBody(xml).element("GetStreamUriResponse").element("MediaUri").element("Uri").getTextTrim();
-		return URLDecoder.decode(uri, StandardCharsets.UTF_8);
+		logger.info("Parsing stream URI from response: \n{}", xml);
+		return URLDecoder.decode(
+				getBody(xml).element("GetStreamUriResponse").element("MediaUri").element("Uri").getTextTrim(),
+				StandardCharsets.UTF_8);
 	}
 
 	/**
@@ -220,7 +222,7 @@ public class OnvifResponseParser {
 	 *                           body contains a Fault element
 	 */
 	public static List<String> parseOnvifDeviceInformation(String xml) throws DocumentException, OnvifException {
-		logger.info("Parsing device information: \n{}", xml);
+		logger.info("Parsing device information from response: \n{}", xml);
 		Element device = getBody(xml).element("GetDeviceInformationResponse");
 
 		String manufacturer = device.element("Manufacturer").getTextTrim();

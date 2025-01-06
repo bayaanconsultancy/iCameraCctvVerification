@@ -8,7 +8,7 @@ public class Profile {
 	private String encoding;
 	private int resolutionWidth;
 	private int resolutionHeight;
-	private int quality;
+	private float quality;
 	private int frameRate;
 	private int encodingInterval;
 	private int bitrate;
@@ -61,11 +61,11 @@ public class Profile {
 		this.resolutionHeight = resolutionHeight;
 	}
 
-	public int quality() {
+	public float quality() {
 		return quality;
 	}
 
-	public void setQuality(int quality) {
+	public void setQuality(float quality) {
 		this.quality = quality;
 	}
 

@@ -1,13 +1,16 @@
 package com.cs.on.icamera.cctv.model;
 
-import static com.cs.on.icamera.cctv.onvif.OnvifResponseParser.parseIpPort;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cs.on.icamera.cctv.util.ThrowableTypeAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Cctv {
+	private static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+			.registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
+
 	private Long id;
 	private int port;
 	private String ip;
@@ -17,8 +20,9 @@ public class Cctv {
 	private String username;
 	private String password;
 	private String serialNumber;
-	private String onvifUrl;
 	private Boolean insideRoom;
+	private String onvifUrl;
+	private String exception;
 	private final List<Profile> profiles;
 	private final OnvifInfo onvifInfo;
 
@@ -96,9 +100,6 @@ public class Cctv {
 	}
 
 	public void setOnvifUrl(String onvifUrl) {
-		Object[] ipPort = parseIpPort(onvifUrl);
-		this.ip = (String) ipPort[0];
-		this.port = (int) ipPort[1];
 		this.onvifUrl = onvifUrl;
 	}
 
@@ -193,7 +194,7 @@ public class Cctv {
 
 	@Override
 	public String toString() {
-		return new Gson().toJson(this);
+		return gson.toJson(this);
 	}
 
 	public OnvifInfo onvifInfo() {
@@ -206,5 +207,17 @@ public class Cctv {
 
 	public void setOnvifPassword(String password) {
 		this.onvifInfo.setPassword(password);
+	}
+
+	public void setException(Exception e) {
+		this.exception = e.getCause().getMessage();
+	}
+
+	public String getException() {
+		return exception;
+	}
+
+	public boolean success() {
+		return exception == null;
 	}
 }

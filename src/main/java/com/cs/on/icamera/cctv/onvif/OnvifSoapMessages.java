@@ -28,23 +28,23 @@ public class OnvifSoapMessages {
 
 	public static final String ONVIF_GET_CAPABILITIES = """
 			<?xml version="1.0" encoding="UTF-8"?>
-			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl">
-			   <soap:Header/>
-			   <soap:Body>
-			      <wsdl:GetCapabilities>
-			         <wsdl:Category>All</wsdl:Category>
-			      </wsdl:GetCapabilities>
-			   </soap:Body>
-			</soap:Envelope>""";
+			<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:tds="http://www.onvif.org/ver10/device/wsdl">
+			   <SOAP-ENV:Header/>
+			   <SOAP-ENV:Body>
+			      <tds:GetCapabilities>
+			         <tds:Category>All</tds:Category>
+			      </tds:GetCapabilities>
+			   </SOAP-ENV:Body>
+			</SOAP-ENV:Envelope>""";
 
 	public static final String ONVIF_GET_DATETIME = """
 			<?xml version="1.0" encoding="UTF-8"?>
-			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl">
-			   <soap:Header/>
-			   <soap:Body>
-			      <wsdl:GetSystemDateAndTime/>
-			   </soap:Body>
-			</soap:Envelope>""";
+			<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:tds="http://www.onvif.org/ver10/device/wsdl">
+			   <SOAP-ENV:Header/>
+			   <SOAP-ENV:Body>
+			      <tds:GetSystemDateAndTime/>
+			   </SOAP-ENV:Body>
+			</SOAP-ENV:Envelope>""";
 
 	public static final String ONVIF_GET_DEVICE_INFORMATION = """
 			<?xml version="1.0" encoding="UTF-8"?>
@@ -55,41 +55,37 @@ public class OnvifSoapMessages {
 			   <soap:Body>
 			      <tds:GetDeviceInformation/>
 			   </soap:Body>
-			</soap:Envelope>
-
-			""";
+			</soap:Envelope>""";
 
 	public static final String ONVIF_GET_PROFILES = """
 			<?xml version="1.0" encoding="UTF-8"?>
-			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl">
+			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:trt="http://www.onvif.org/ver10/media/wsdl">
 			   <soap:Header>
 			        %s
 			   </soap:Header>
 			   <soap:Body>
-			      <wsdl:GetProfiles/>
+			      <trt:GetProfiles/>
 			   </soap:Body>
-			</soap:Envelope>
-			""";
+			</soap:Envelope>""";
 
 	public static final String ONVIF_GET_STREAM_URI = """
 			<?xml version="1.0" encoding="UTF-8"?>
-			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wsdl="http://www.onvif.org/ver10/device/wsdl">
+			<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:trt="http://www.onvif.org/ver10/media/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema">
 			   <soap:Header>
 			        %s
 			   </soap:Header>
-			   <soap:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-			      <wsdl:GetStreamUri xmlns="http://www.onvif.org/ver10/media/wsdl">
-			         <StreamSetup xmlns="http://www.onvif.org/ver10/schema">
-			            <Stream xmlns="http://www.onvif.org/ver10/schema">RTP-Unicast</Stream>
-			            <Transport xmlns="http://www.onvif.org/ver10/schema">
-			               <Protocol>UDP</Protocol>
-			            </Transport>
-			         </StreamSetup>
-			         <ProfileToken>%s</ProfileToken>
-			      </wsdl:GetStreamUri>
+			   <soap:Body>
+			      <trt:GetStreamUri>
+			         <trt:StreamSetup>
+			            <tt:Stream>RTP-Unicast</tt:Stream>
+			            <tt:Transport>
+			               <tt:Protocol>UDP</tt:Protocol>
+			            </tt:Transport>
+			         </trt:StreamSetup>
+			         <trt:ProfileToken>%s</trt:ProfileToken>
+			      </trt:GetStreamUri>
 			   </soap:Body>
-			</soap:Envelope>
-			""";
+			</soap:Envelope>""";
 
 	private OnvifSoapMessages() {
 	}

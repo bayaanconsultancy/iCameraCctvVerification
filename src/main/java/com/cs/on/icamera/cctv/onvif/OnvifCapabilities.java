@@ -26,12 +26,11 @@ public class OnvifCapabilities {
             String response = HttpSoapClient.postXml(cctv.getOnvifUrl(), ONVIF_GET_CAPABILITIES);
 
             // Parse the response and set the media and device URLs in the device info
-            String mediaUrl = OnvifResponseParser.parseMediaUrl(response);
-            String deviceUrl = OnvifResponseParser.parseDeviceUrl(response);
-            cctv.onvifInfo().setDeviceUrl(deviceUrl).setMediaUrl(mediaUrl);
+            String[] urls = OnvifResponseParser.parseDeviceAndMediaUrl(response);
+            cctv.onvifInfo().setDeviceUrl(urls[0]).setMediaUrl(urls[1]);
         } catch (Exception e) {
             logger.error("Error getting capabilities for {} as {}", cctv, e.getMessage());
             throw new OnvifException(e);
-		}
-	}
+        }
+    }
 }

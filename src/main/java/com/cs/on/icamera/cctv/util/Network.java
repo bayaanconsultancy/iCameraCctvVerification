@@ -10,6 +10,9 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class Network {
+	private Network() {
+	}
+
 	private static final Logger logger = LogManager.getLogger(Network.class);
 
 	public static List<String> getLocalIps() {
@@ -61,6 +64,16 @@ public class Network {
 
 	public static int getFreeLocalPort() throws IOException {
 		try (ServerSocket socket = new ServerSocket(0)) {
+			return socket.getLocalPort();
+		} catch (IOException e) {
+			logger.error("Error getting a free local port number:", e);
+			throw new IOException(e);
+		}
+	}
+
+	public static int getFreeLocalPort(NetworkInterface networkInterface) throws IOException {
+		try (ServerSocket socket = new ServerSocket(0)) {
+			socket.bind(new InetSocketAddress(networkInterface.getInetAddresses().nextElement(), 0));
 			return socket.getLocalPort();
 		} catch (IOException e) {
 			logger.error("Error getting a free local port number:", e);

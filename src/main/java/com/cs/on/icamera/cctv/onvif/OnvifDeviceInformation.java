@@ -26,7 +26,7 @@ public class OnvifDeviceInformation {
 		try {
 			// Make the request to the ONVIF device
 			String xml = String.format(ONVIF_GET_DEVICE_INFORMATION, cctv.onvifInfo().header());
-			logger.info("Getting device information for {} with {}", cctv.onvifInfo().deviceUrl(), xml);
+			logger.info("Getting device information for {} with \n{}", cctv.onvifInfo().deviceUrl(), xml);
 
 			// Parse the response and set the make, model and serial number of the Cctv
 			// object
