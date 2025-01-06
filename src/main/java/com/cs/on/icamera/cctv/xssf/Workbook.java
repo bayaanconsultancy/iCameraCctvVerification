@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Workbook {
-    private Workbook() {}
     private static final Logger logger = LogManager.getLogger(Workbook.class);
-    
+
+    private Workbook() {
+    }
+
     public static void writeCctvsToExcel(List<Cctv> cctvs, String filename) throws IOException {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             XSSFSheet sheet = workbook.createSheet("CCTVs");
@@ -73,15 +75,7 @@ public class Workbook {
                 Cctv cctv = new Cctv();
                 for (Columns col : Columns.values()) {
                     Cell cell = row.getCell(headerIndex.get(col.name()));
-                    Object value;
-                    switch (cell.getCellType()) {
-                        case NUMERIC -> value = cell.getNumericCellValue();
-                        case BOOLEAN -> value = cell.getBooleanCellValue();
-                        case BLANK -> value = null;
-                        case ERROR -> throw new IOException("Error reading cell value");
-                        case FORMULA -> throw new IOException("Reading a formula cell is not supported");
-                        default -> value = cell.getStringCellValue();
-                    }
+                    Object value = getObject(cell);
                     cctv.getClass().getMethod(col.setter(), col.type()).invoke(cctv, value);
                 }
                 cctvs.add(cctv);
@@ -90,5 +84,16 @@ public class Workbook {
             logger.error("Error reading cctvs from excel", e);
         }
         return cctvs;
+    }
+
+    private static Object getObject(Cell cell) throws IOException {
+        return switch (cell.getCellType()) {
+            case NUMERIC -> cell.getNumericCellValue();
+            case BOOLEAN -> cell.getBooleanCellValue();
+            case BLANK -> null;
+            case ERROR -> throw new IOException("Error reading cell value");
+            case FORMULA -> throw new IOException("Reading a formula cell is not supported");
+            default -> cell.getStringCellValue();
+        };
     }
 }
