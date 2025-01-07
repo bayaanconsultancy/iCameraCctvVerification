@@ -41,6 +41,8 @@ public class OnvifProfiles {
 				// Parse the response and store the stream URI in the profile
 				profile.setStreamUri(OnvifResponseParser
 						.parseStreamUri(HttpSoapClient.postXml(cctv.onvifInfo().mediaUrl(), streamXml)));
+
+				cctv.setIpPort(profile.streamUri());
 			}
 		} catch (Exception e) {
 			logger.error("Error getting profiles for {} as {}", cctv, e.getMessage());

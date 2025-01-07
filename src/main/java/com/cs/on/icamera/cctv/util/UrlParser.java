@@ -73,4 +73,9 @@ public class UrlParser {
             throw new OnvifException(e);
         }
     }
+
+
+    public static String getOnvifDeviceServiceUrl(String ip, int port) {
+        return "http://" + ip + ":" + port + "/onvif/device_service";
+    }
 }

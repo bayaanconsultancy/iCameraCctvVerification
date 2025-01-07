@@ -111,13 +111,9 @@ public class Cctv {
 
     public void setProfiles(List<Profile> profiles) {
         this.profiles.addAll(profiles);
-        try {
-            setIpPort(profiles.getFirst().streamUri());
-        } catch (Exception e) {
-            setError(e);
-        }
     }
-    private void setIpPort(String streamUri) throws OnvifException {
+
+    public void setIpPort(String streamUri) throws OnvifException {
             this.setIp(UrlParser.getHostname(streamUri));
             this.setPort(UrlParser.getPort(streamUri));
     }
