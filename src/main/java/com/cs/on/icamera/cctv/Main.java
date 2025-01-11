@@ -1,27 +1,19 @@
 package com.cs.on.icamera.cctv;
 
-import java.io.IOException;
-
 import com.cs.on.icamera.cctv.data.DataStore;
-import com.cs.on.icamera.cctv.ffmpeg.Ffprobe;
 import com.cs.on.icamera.cctv.onvif.OnvifDiscovery;
 import com.cs.on.icamera.cctv.onvif.OnvifEnquiry;
-import com.cs.on.icamera.cctv.swing.MainWindow;
+import com.cs.on.icamera.cctv.onvif.OnvifNetworkScan;
 
 public class Main {
     public static void main(String[] args) {
-        
+        String username = System.getProperty("username", "admin");
+        String password = System.getProperty("password", "Aminul@24");
 
-        //new MainWindow();
         OnvifDiscovery.discover();
-        DataStore.setOnvifUsernamePassword("admin", "Aminul@24");
+        OnvifNetworkScan.scan();
+        DataStore.setOnvifCredential(username, password);
         OnvifEnquiry.enquire();
-        DataStore.printDiscoveredCctvs();
-        try {
-            Ffprobe.get();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        DataStore.printIdentifiedCctvs();
     }
 }

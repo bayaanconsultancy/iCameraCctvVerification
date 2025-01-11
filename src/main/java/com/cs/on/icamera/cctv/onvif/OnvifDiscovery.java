@@ -1,6 +1,7 @@
 package com.cs.on.icamera.cctv.onvif;
 
 import com.cs.on.icamera.cctv.data.DataStore;
+import com.cs.on.icamera.cctv.error.OnvifDiscoveryException;
 import com.cs.on.icamera.cctv.model.Cctv;
 import com.cs.on.icamera.cctv.util.Network;
 import org.apache.logging.log4j.LogManager;

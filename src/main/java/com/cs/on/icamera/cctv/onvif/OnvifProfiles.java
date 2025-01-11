@@ -1,5 +1,6 @@
 package com.cs.on.icamera.cctv.onvif;
 
+import com.cs.on.icamera.cctv.error.OnvifException;
 import com.cs.on.icamera.cctv.model.Cctv;
 import com.cs.on.icamera.cctv.model.Profile;
 import com.cs.on.icamera.cctv.util.HttpSoapClient;

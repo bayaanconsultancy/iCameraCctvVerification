@@ -10,38 +10,50 @@ import java.util.List;
 import java.util.Map;
 
 public class DataStore {
-	private DataStore() {}
-	private static final Logger logger = LogManager.getLogger(DataStore.class);
+    private static final Logger logger = LogManager.getLogger(DataStore.class);
+    private static final Map<String, Cctv> identifiedDevices = new HashMap<>();
+    private static int discoveredCctvCount;
+    private static int scannedCctvCount;
 
-	private static final Map<String, Cctv> discoveredCctvs = new HashMap<>();
+    private DataStore() {
+    }
 
-	public static void addDiscoveredCctv(Cctv cctv) {
-		discoveredCctvs.put(cctv.getOnvifUrl(), cctv);
-	}
+    public static void addDiscoveredCctv(Cctv cctv) {
+        if (identifiedDevices.put(cctv.getOnvifUrl(), cctv) == null) discoveredCctvCount++;
+    }
 
-	public static int getDiscoveredCctvCount() {
-		return discoveredCctvs.size();
-	}
+    public static int getDiscoveredCctvCount() {
+        return discoveredCctvCount;
+    }
 
-	public static List<Cctv> getDiscoveredCctvs() {
-		return new ArrayList<>(discoveredCctvs.values());
-	}
+    public static void addScannedCctv(Cctv cctv) {
+        if (identifiedDevices.put(cctv.getOnvifUrl(), cctv) == null) scannedCctvCount++;
+    }
 
-	public static void printDiscoveredCctvs() {
-		if (discoveredCctvs.isEmpty()) {
-			logger.info("No CCTVs discovered.");
-		} else {
-			logger.info("Discovered CCTVs: ");
-			for (Cctv cctv : discoveredCctvs.values()) {
-				logger.info("-- {}", cctv);
-			}
-		}
-	}
+    public static int getScannedCctvCount() {
+        return scannedCctvCount;
+    }
 
-	public static void setOnvifUsernamePassword(String username, String password) {
-		for (Cctv cctv : discoveredCctvs.values()) {
-			cctv.setOnvifUsername(username);
-			cctv.setOnvifPassword(password);
-		}
-	}
+    public static List<Cctv> getIdentifiedDevices() {
+        return new ArrayList<>(identifiedDevices.values());
+    }
+
+    public static void printIdentifiedCctvs() {
+        if (identifiedDevices.isEmpty()) {
+            logger.info("No CCTVs discovered.");
+        } else {
+            logger.info("Discovered CCTVs: ");
+            for (Cctv cctv : identifiedDevices.values()) {
+                logger.info("-- {}", cctv);
+            }
+        }
+    }
+
+    public static void setOnvifCredential(String username, String password) {
+        for (Cctv cctv : identifiedDevices.values()) {
+            cctv.setOnvifUsername(username);
+            cctv.setOnvifPassword(password);
+        }
+    }
+
 }

@@ -55,8 +55,8 @@ public class Network {
         return addresses;
     }
 
-    public static List<String> getInetAddressesInSubnet() {
-        List<String> allAddresses = new ArrayList<>();
+    public static Set<String> getInetAddressesInSubnet() {
+        Set<String> allAddresses = new HashSet<>();
 
         for (NetworkInterface networkInterface : getNetworkInterfaces())
             allAddresses.addAll(getInetAddressesInSubnet(networkInterface));
@@ -64,12 +64,13 @@ public class Network {
         return allAddresses;
     }
 
-    public static List<String> getInetAddressesInSubnet(NetworkInterface networkInterface) {
-        List<String> addresses = new ArrayList<>();
+    public static Set<String> getInetAddressesInSubnet(NetworkInterface networkInterface) {
+        Set<String> addresses = new HashSet<>();
         for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-
-            String cidrNotation = interfaceAddress.getAddress().getHostAddress() + "/" + interfaceAddress.getNetworkPrefixLength();
-            addresses = List.of(new SubnetUtils(cidrNotation).getInfo().getAllAddresses());
+            if (interfaceAddress.getAddress() instanceof Inet4Address) {
+                String cidrNotation = interfaceAddress.getAddress().getHostAddress() + "/" + interfaceAddress.getNetworkPrefixLength();
+                addresses = Set.of(new SubnetUtils(cidrNotation).getInfo().getAllAddresses());
+            }
         }
         return addresses;
     }

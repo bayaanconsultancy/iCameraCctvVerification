@@ -1,4 +1,4 @@
-package com.cs.on.icamera.cctv.util;
+package com.cs.on.icamera.cctv.error;
 
 import java.io.IOException;
 

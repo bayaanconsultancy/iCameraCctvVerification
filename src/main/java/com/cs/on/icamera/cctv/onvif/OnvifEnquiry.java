@@ -16,7 +16,7 @@ public class OnvifEnquiry {
 	 */
 	public static void enquire() {
 		// Iterate over all discovered CCTVs and get their ONVIF details
-		DataStore.getDiscoveredCctvs().forEach(OnvifEnquiry::getOnvifDetails);
+		DataStore.getIdentifiedDevices().forEach(OnvifEnquiry::getOnvifDetails);
 	}
 
 	/**

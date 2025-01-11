@@ -87,6 +87,14 @@ public class OnvifSoapMessages {
 			   </soap:Body>
 			</soap:Envelope>""";
 
+	public static final String ONVIF_COMPATIBILITY = """
+			<?xml version="1.0" encoding="utf-8"?>
+			<Envelope xmlns="http://www.w3.org/2003/05/soap-envelope">
+				<Body>
+					<GetCapabilities xmlns="http://www.onvif.org/ver10/device/wsdl"/>
+				</Body>
+			</Envelope>""";
+
 	private OnvifSoapMessages() {
 	}
 }

@@ -1,6 +1,6 @@
 package com.cs.on.icamera.cctv.util;
 
-import com.cs.on.icamera.cctv.onvif.OnvifException;
+import com.cs.on.icamera.cctv.error.OnvifException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

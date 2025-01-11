@@ -1,5 +1,6 @@
 package com.cs.on.icamera.cctv.onvif;
 
+import com.cs.on.icamera.cctv.error.OnvifException;
 import com.cs.on.icamera.cctv.model.Profile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -231,4 +232,9 @@ public class OnvifResponseParser {
 
 		return Arrays.asList(manufacturer, model, serialNumber);
 	}
+
+    public static boolean isOnvifDevice(String response) {
+		logger.info("Confirming ONVIF device: \n{}", response);
+		return response != null && response.contains("GetCapabilitiesResponse");
+    }
 }

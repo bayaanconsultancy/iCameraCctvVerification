@@ -1,7 +1,7 @@
 package com.cs.on.icamera.cctv.model;
 
-import com.cs.on.icamera.cctv.onvif.OnvifException;
-import com.cs.on.icamera.cctv.util.ThrowableTypeAdapter;
+import com.cs.on.icamera.cctv.error.OnvifException;
+import com.cs.on.icamera.cctv.error.ThrowableTypeAdapter;
 import com.cs.on.icamera.cctv.util.UrlParser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
