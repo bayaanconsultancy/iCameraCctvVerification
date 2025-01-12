@@ -22,7 +22,7 @@ public class Cctv {
     private String serialNumber; // Serial No
     private Boolean insideRoom; // Inside Room
     private String onvifUrl;
-    private List<String> error; // Error Message
+    private final List<String> error; // Error Message
     private final List<Profile> profiles; // RTSP Port, Main Stream URL, Sub Stream URL
     private final OnvifInfo onvifInfo;
 
@@ -180,9 +180,16 @@ public class Cctv {
     public void setOnvifUsername(String username) {
         this.onvifInfo.setUsername(username);
     }
+    public String getUsername() {
+        return onvifInfo.username();
+    }
+
 
     public void setOnvifPassword(String password) {
         this.onvifInfo.setPassword(password);
+    }
+    public String getPassword() {
+        return onvifInfo.password();
     }
 
     public String getError() {

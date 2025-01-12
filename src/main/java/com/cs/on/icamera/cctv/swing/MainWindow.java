@@ -6,9 +6,9 @@ import java.awt.*;
 
 public class MainWindow {
     public MainWindow() {
-        JFrame frame = new JFrame("CCTV Manager");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 200);
+        JFrame frame = new JFrame("iCAMERA CCTV Verification");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(640, 480);
         frame.setLayout(new GridBagLayout());
 
         JButton discoverButton = new JButton("Discover CCTV");
@@ -18,11 +18,13 @@ public class MainWindow {
         GridBagConstraints gbc = new GridBagConstraints();
 
         discoverButton.addActionListener(e -> {
-            // Logic for discovering CCTV
+            frame.dispose();
+            new DiscoveryWindow();
         });
 
         verifyButton.addActionListener(e -> {
-            // Logic for verifying CCTV using Excel
+            frame.dispose();
+            // TODO: Add logic to open the validate excel window
         });
 
         gbc.insets = new Insets(10, 10, 10, 10);

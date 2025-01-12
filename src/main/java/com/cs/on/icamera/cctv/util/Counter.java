@@ -27,7 +27,7 @@ public class Counter {
         if (total == 0) {
             return 0;
         }
-        return count.get() / total * 100;
+        return (count.get() * 100) / total;
     }
 
     public boolean isComplete() {

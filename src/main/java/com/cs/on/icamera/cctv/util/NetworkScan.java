@@ -100,6 +100,10 @@ public class NetworkScan {
         return counter.getPercentage();
     }
 
+    public boolean isComplete() {
+        return counter.isComplete();
+    }
+
     private record IpPort(String ip, Integer port) {
     }
 }

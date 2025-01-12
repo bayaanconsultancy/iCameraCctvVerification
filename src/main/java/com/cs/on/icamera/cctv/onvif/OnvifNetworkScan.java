@@ -65,7 +65,11 @@ public class OnvifNetworkScan {
         }
     }
 
-    public int progress() {
-        return scanner.getProgress();
+    public static int progress() {
+        return scanner == null ? 0 : scanner.getProgress();
+    }
+
+    public static boolean isComplete() {
+        return scanner != null && scanner.isComplete();
     }
 }

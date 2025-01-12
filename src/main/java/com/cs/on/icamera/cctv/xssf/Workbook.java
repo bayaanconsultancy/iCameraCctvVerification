@@ -8,12 +8,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Workbook {
     private static final Logger logger = LogManager.getLogger(Workbook.class);
@@ -21,34 +19,35 @@ public class Workbook {
     private Workbook() {
     }
 
-    public static void writeCctvsToExcel(List<Cctv> cctvs, String filename) throws IOException {
+    public static void writeCctvsToExcel(File file, String sheetName, Columns[] columns, List<Cctv> cctvs) {
+        logger.info("Writing file {} to sheet {} with columns {} and {} cctvs", file, sheetName, columns, cctvs.size());
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            XSSFSheet sheet = workbook.createSheet("CCTVs");
-            Columns[] col = Columns.values();
+            XSSFSheet sheet = workbook.createSheet(sheetName);
 
             int rownum = 0;
             Row headerRow = sheet.createRow(rownum);
-            for (int i = 0; i < col.length; i++) {
+            for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
-                cell.setCellValue(col[i].name());
+                cell.setCellValue(columns[i].colName());
             }
 
             rownum++;
             for (Cctv cctv : cctvs) {
                 Row row = sheet.createRow(rownum);
-                for (int i = 0; i < col.length; i++) {
+                for (int i = 0; i < columns.length; i++) {
                     Cell cell = row.createCell(i);
-                    Object value = cctv.getClass().getMethod(col[i].getter()).invoke(cctv);
+                    Object value = cctv.getClass().getMethod(columns[i].getter()).invoke(cctv);
 
                     switch (value) {
-                        case Number number -> cell.setCellValue((Double) value);
-                        case Boolean b -> cell.setCellValue(b);
-                        case null, default -> cell.setCellValue(String.valueOf(value));
+                        case Number ignored -> cell.setCellValue((Double) value);
+                        case Boolean ignored -> cell.setCellValue((Boolean) value);
+                        case null -> cell.setCellValue("");
+                        default -> cell.setCellValue(String.valueOf(value));
                     }
                 }
                 rownum++;
             }
-            try (FileOutputStream outputStream = new FileOutputStream(filename)) {
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
                 workbook.write(outputStream);
             }
         } catch (Exception e) {
@@ -57,10 +56,10 @@ public class Workbook {
     }
 
 
-    public static List<Cctv> readCctvsFromExcel(String filename) throws IOException {
+    public static List<Cctv> readCctvsFromExcel(File file, String sheetName, Columns[] columns) {
         List<Cctv> cctvs = new ArrayList<>();
-        try (XSSFWorkbook workbook = new XSSFWorkbook(filename)) {
-            XSSFSheet sheet = workbook.getSheetAt(0);
+        try (XSSFWorkbook workbook = new XSSFWorkbook(file)) {
+            XSSFSheet sheet = workbook.getSheet(sheetName);
             int headerRowNum = 0;
             Row headerRow = sheet.getRow(headerRowNum);
             Map<String, Integer> headerIndex = new HashMap<>();
@@ -73,10 +72,10 @@ public class Workbook {
             for (int i = rowStart; i <= rowEnd; i++) {
                 Row row = sheet.getRow(i);
                 Cctv cctv = new Cctv();
-                for (Columns col : Columns.values()) {
-                    Cell cell = row.getCell(headerIndex.get(col.name()));
+                for (Columns column : columns) {
+                    Cell cell = row.getCell(headerIndex.get(column.colName()));
                     Object value = getObject(cell);
-                    cctv.getClass().getMethod(col.setter(), col.type()).invoke(cctv, value);
+                    cctv.getClass().getMethod(column.setter(), column.type()).invoke(cctv, value);
                 }
                 cctvs.add(cctv);
             }
