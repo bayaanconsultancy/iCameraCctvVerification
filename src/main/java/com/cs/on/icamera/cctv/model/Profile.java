@@ -17,79 +17,89 @@ public class Profile {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Profile setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String token() {
 		return token;
 	}
 
-	public void setToken(String token) {
+	public Profile setToken(String token) {
 		this.token = token;
+		return this;
 	}
 
 	public String streamUri() {
 		return streamUri;
 	}
 
-	public void setStreamUri(String streamUri) {
+	public Profile setStreamUri(String streamUri) {
 		this.streamUri = streamUri;
+		return this;
 	}
 
 	public String encoding() {
 		return encoding;
 	}
 
-	public void setEncoding(String encoding) {
+	public Profile setEncoding(String encoding) {
 		this.encoding = encoding;
+		return this;
 	}
 
 	public int resolutionWidth() {
 		return resolutionWidth;
 	}
 
-	public void setResolutionWidth(int resolutionWidth) {
+	public Profile setResolutionWidth(int resolutionWidth) {
 		this.resolutionWidth = resolutionWidth;
+		return this;
 	}
 
 	public int resolutionHeight() {
 		return resolutionHeight;
 	}
 
-	public void setResolutionHeight(int resolutionHeight) {
+	public Profile setResolutionHeight(int resolutionHeight) {
 		this.resolutionHeight = resolutionHeight;
+		return this;
 	}
 
 	public float quality() {
 		return quality;
 	}
 
-	public void setQuality(float quality) {
+	public Profile setQuality(float quality) {
 		this.quality = quality;
+		return this;
 	}
 
 	public int frameRate() {
 		return frameRate;
 	}
 
-	public void setFrameRate(int frameRate) {
+	public Profile setFrameRate(int frameRate) {
 		this.frameRate = frameRate;
+		return this;
 	}
 
 	public int encodingInterval() {
 		return encodingInterval;
 	}
 
-	public void setEncodingInterval(int encodingInterval) {
+	public Profile setEncodingInterval(int encodingInterval) {
 		this.encodingInterval = encodingInterval;
+		return this;
 	}
 
 	public int bitrate() {
 		return bitrate;
 	}
 
-	public void setBitrate(int bitrate) {
+	public Profile setBitrate(int bitrate) {
 		this.bitrate = bitrate;
+		return this;
 	}
 }

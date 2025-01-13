@@ -19,7 +19,7 @@ public class OnvifEnquiry {
 	 * This method retrieves and processes ONVIF details for each discovered CCTV.
 	 */
 	public static void enquire() {
-		List<Cctv> devices = DataStore.getIdentifiedDevices();
+		List<Cctv> devices = DataStore.getIdentifiedCctvs();
 
 		// Start the progress logger
 		counter = new Counter(devices.size());

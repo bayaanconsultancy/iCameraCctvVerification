@@ -1,45 +1,70 @@
 package com.cs.on.icamera.cctv.swing;
 
+import com.cs.on.icamera.cctv.data.DataStore;
+import com.cs.on.icamera.cctv.error.VerificationException;
+import com.cs.on.icamera.cctv.model.Cctv;
+import com.cs.on.icamera.cctv.xssf.SheetNames;
+import com.cs.on.icamera.cctv.xssf.TemplateColumns;
+import com.cs.on.icamera.cctv.xssf.Workbook;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.util.List;
 
 public class MainWindow {
-    public MainWindow() {
-        JFrame frame = new JFrame("iCAMERA CCTV Verification");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(640, 480);
-        frame.setLayout(new GridBagLayout());
+	private final JFrame frame;
 
-        JButton discoverButton = new JButton("Discover CCTV");
-        discoverButton.setToolTipText("Click to discover available CCTV devices on the network.");
-        JButton verifyButton = new JButton("Verify CCTV using Excel");
-        verifyButton.setToolTipText("Click to verify available CCTV devices using Excel file.");
-        GridBagConstraints gbc = new GridBagConstraints();
+	public MainWindow() {
+		frame = new JFrame("iCAMERA CCTV Verification");
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setSize(640, 480);
+		frame.setLayout(new GridBagLayout());
 
-        discoverButton.addActionListener(e -> {
-            frame.dispose();
-            new DiscoveryWindow();
-        });
+		JButton discoverButton = new JButton("Discover CCTV");
+		discoverButton.setToolTipText("Click to discover available CCTV devices on the network.");
+		JButton verifyButton = new JButton("Verify CCTV using Excel");
+		verifyButton.setToolTipText("Click to verify available CCTV devices using Excel file.");
+		GridBagConstraints gbc = new GridBagConstraints();
 
-        verifyButton.addActionListener(e -> {
-            frame.dispose();
-            // TODO: Add logic to open the validate excel window
-        });
+		discoverButton.addActionListener(e -> {
+			frame.dispose();
+			new DiscoveryWindow();
+		});
 
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        frame.add(discoverButton, gbc);
+		verifyButton.addActionListener(e -> uploadExcelTemplate());
 
-        gbc.gridy = 1;
-        frame.add(verifyButton, gbc);
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		frame.add(discoverButton, gbc);
 
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
+		gbc.gridy = 1;
+		frame.add(verifyButton, gbc);
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MainWindow::new);
-    }
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+
+	private void uploadExcelTemplate() {
+		try {
+			File file = FileDialogUtils.openExcelFileDialog();
+			if (file != null) {
+				List<Cctv> cctvs = Workbook.readCctvsFromExcel(file, SheetNames.TEMPLATE, TemplateColumns.values());
+				if (cctvs.isEmpty()) {
+					throw new VerificationException("Excel file is empty.");
+				}
+				DataStore.setCctvsToVerify(cctvs);
+				frame.dispose();
+				new VerifyCctvWindow();
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Error reading template excel: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(MainWindow::new);
+	}
 }

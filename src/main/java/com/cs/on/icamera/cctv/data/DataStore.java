@@ -10,50 +10,68 @@ import java.util.List;
 import java.util.Map;
 
 public class DataStore {
-    private static final Logger logger = LogManager.getLogger(DataStore.class);
-    private static final Map<String, Cctv> identifiedDevices = new HashMap<>();
-    private static int discoveredCctvCount;
-    private static int scannedCctvCount;
+	private static final Logger logger = LogManager.getLogger(DataStore.class);
+	private static final Map<String, Cctv> identifiedCctvs = new HashMap<>();
+	private static List<Cctv> cctvsToVerify;
+	private static int discoveredCctvCount;
+	private static int scannedCctvCount;
 
-    private DataStore() {
-    }
+	private DataStore() {
+	}
 
-    public static void addDiscoveredCctv(Cctv cctv) {
-        if (identifiedDevices.put(cctv.getOnvifUrl(), cctv) == null) discoveredCctvCount++;
-    }
+	public static void addDiscoveredCctv(Cctv cctv) {
+		if (identifiedCctvs.put(cctv.getOnvifUrl(), cctv) == null)
+			discoveredCctvCount++;
+	}
 
-    public static int getDiscoveredCctvCount() {
-        return discoveredCctvCount;
-    }
+	public static int getDiscoveredCctvCount() {
+		return discoveredCctvCount;
+	}
 
-    public static void addScannedCctv(Cctv cctv) {
-        if (identifiedDevices.put(cctv.getOnvifUrl(), cctv) == null) scannedCctvCount++;
-    }
+	public static void addScannedCctv(Cctv cctv) {
+		if (identifiedCctvs.put(cctv.getOnvifUrl(), cctv) == null)
+			scannedCctvCount++;
+	}
 
-    public static int getScannedCctvCount() {
-        return scannedCctvCount;
-    }
+	public static int getScannedCctvCount() {
+		return scannedCctvCount;
+	}
 
-    public static List<Cctv> getIdentifiedDevices() {
-        return new ArrayList<>(identifiedDevices.values());
-    }
+	public static List<Cctv> getIdentifiedCctvs() {
+		return new ArrayList<>(identifiedCctvs.values());
+	}
 
-    public static void printIdentifiedCctvs() {
-        if (identifiedDevices.isEmpty()) {
-            logger.info("No CCTVs discovered.");
-        } else {
-            logger.info("Discovered CCTVs: ");
-            for (Cctv cctv : identifiedDevices.values()) {
-                logger.info("-- {}", cctv);
-            }
-        }
-    }
+	public static void printIdentifiedCctvs() {
+		if (identifiedCctvs.isEmpty()) {
+			logger.info("No CCTVs discovered.");
+		} else {
+			logger.info("Discovered CCTVs: ");
+			for (Cctv cctv : identifiedCctvs.values()) {
+				logger.info("-- {}", cctv);
+			}
+		}
+	}
 
-    public static void setOnvifCredential(String username, String password) {
-        for (Cctv cctv : identifiedDevices.values()) {
-            cctv.setOnvifUsername(username);
-            cctv.setOnvifPassword(password);
-        }
-    }
+	public static void setOnvifCredential(String username, String password) {
+		for (Cctv cctv : identifiedCctvs.values()) {
+			cctv.setOnvifUsername(username);
+			cctv.setOnvifPassword(password);
+		}
+	}
 
+	public static int getOnvifErrorCount() {
+		return identifiedCctvs.values().stream().filter(cctv -> !cctv.success()).toList().size();
+	}
+
+	public static void setCctvsToVerify(List<Cctv> cctvs) {
+		cctvsToVerify = cctvs;
+	}
+
+	public static List<Cctv> getCctvsToVerify() {
+		return cctvsToVerify;
+	}
+
+	public static List<Cctv> getCorrectCctvs() {
+		return cctvsToVerify.stream().filter(Cctv::success).toList();
+	}
 }

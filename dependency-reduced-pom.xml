@@ -5,7 +5,7 @@
   <artifactId>iCameraCctvVerification</artifactId>
   <version>1.0</version>
   <description>This project is a tool to verify the configuration of the of CCTVs with
-		iCamera.</description>
+        iCamera.</description>
   <inceptionYear>2025</inceptionYear>
   <organization>
     <name>Consultancy Services</name>
@@ -117,6 +117,7 @@
               </classPath>
               <jre>
                 <path>jre</path>
+                <minVersion>21</minVersion>
                 <opts>
                   <opt>-Djava.net.preferIPv4Stack=true</opt>
                 </opts>

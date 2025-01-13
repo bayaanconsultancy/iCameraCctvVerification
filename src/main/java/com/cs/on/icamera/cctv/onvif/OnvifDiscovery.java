@@ -114,10 +114,8 @@ public class OnvifDiscovery {
 	 * <p>
 	 * If no ONVIF devices are found, it logs a warning message.
 	 *
-	 * @param networkInterface
-	 *            The network interface to discover ONVIF devices on.
-	 * @param localPort
-	 *            The free local port to bind the MulticastSocket to.
+	 * @param networkInterface The network interface to discover ONVIF devices on.
+	 * @param localPort        The free local port to bind the MulticastSocket to.
 	 */
 	private static void discover(NetworkInterface networkInterface, int localPort) {
 		try (MulticastSocket socket = new MulticastSocket(localPort)) {

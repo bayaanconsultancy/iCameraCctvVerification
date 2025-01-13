@@ -26,8 +26,8 @@ public class OnvifResponseParser {
 	 * Extracts the first "normal" hostname-based URL from the response.
 	 * <p>
 	 * Some devices may respond with multiple URLs, such as a hostname and a
-	 * link-local address. This method will extract the first URL that has
-	 * a valid hostname and not a IPv6 address.
+	 * link-local address. This method will extract the first URL that has a valid
+	 * hostname and not a IPv6 address.
 	 *
 	 * @param xml the response from the ONVIF device
 	 * @return the first hostname-based URL from the response
@@ -35,13 +35,12 @@ public class OnvifResponseParser {
 	 */
 	public static String parseOnvifAddress(String xml) throws DocumentException {
 		/*
-		 * Example:
-		 * 1. <d:XAddrs>http://172.16.0.27/onvif/device_service
-		 * http://[fe80::26b1:5ff:fe39:8d91]/onvif/device_service</d:XAddrs>
-		 * 2. <d:XAddrs>http://192.168.0.113:8000/onvif/device_service</d:XAddrs>
+		 * Example: 1. <d:XAddrs>http://172.16.0.27/onvif/device_service
+		 * http://[fe80::26b1:5ff:fe39:8d91]/onvif/device_service</d:XAddrs> 2.
+		 * <d:XAddrs>http://192.168.0.113:8000/onvif/device_service</d:XAddrs>
 		 */
-		String[] urls = DocumentHelper.parseText(xml).getRootElement().element("Body")
-				.element("ProbeMatches").element("ProbeMatch").element("XAddrs").getTextTrim().split("\\s+");
+		String[] urls = DocumentHelper.parseText(xml).getRootElement().element("Body").element("ProbeMatches")
+				.element("ProbeMatch").element("XAddrs").getTextTrim().split("\\s+");
 
 		for (String url : urls) {
 			try {
@@ -57,8 +56,8 @@ public class OnvifResponseParser {
 	}
 
 	/**
-	 * Parses the given XML string to extract the device and media URLs
-	 * from the GetCapabilitiesResponse.
+	 * Parses the given XML string to extract the device and media URLs from the
+	 * GetCapabilitiesResponse.
 	 *
 	 * @param xml the XML response from the ONVIF device
 	 * @return an array containing the media and device URLs
@@ -68,10 +67,8 @@ public class OnvifResponseParser {
 		logger.info("Parsing device and media URL from response: \n{}", xml);
 
 		// Parse the XML to get the Capabilities element
-		Element capabilities = DocumentHelper.parseText(xml).getRootElement()
-				.element("Body")
-				.element("GetCapabilitiesResponse")
-				.element("Capabilities");
+		Element capabilities = DocumentHelper.parseText(xml).getRootElement().element("Body")
+				.element("GetCapabilitiesResponse").element("Capabilities");
 
 		// Extract the Media and Device URLs from the Capabilities element
 		String deviceUrl = capabilities.element("Device").element("XAddr").getTextTrim();
@@ -233,8 +230,8 @@ public class OnvifResponseParser {
 		return Arrays.asList(manufacturer, model, serialNumber);
 	}
 
-    public static boolean isOnvifDevice(String response) {
+	public static boolean isOnvifDevice(String response) {
 		logger.info("Confirming ONVIF device: \n{}", response);
 		return response != null && response.contains("GetCapabilitiesResponse");
-    }
+	}
 }

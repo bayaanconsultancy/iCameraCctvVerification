@@ -37,7 +37,8 @@ public class OnvifProfiles {
 			// Get the stream URI for each profile
 			for (Profile profile : cctv.getProfiles()) {
 				String streamXml = String.format(ONVIF_GET_STREAM_URI, cctv.onvifInfo().header(), profile.token());
-				logger.info("Getting stream URI from {} for {} with \n{}", cctv.onvifInfo().mediaUrl(), profile.name(), streamXml);
+				logger.info("Getting stream URI from {} for {} with \n{}", cctv.onvifInfo().mediaUrl(), profile.name(),
+						streamXml);
 
 				// Parse the response and store the stream URI in the profile
 				profile.setStreamUri(OnvifResponseParser

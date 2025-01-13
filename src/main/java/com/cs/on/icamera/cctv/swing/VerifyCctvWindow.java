@@ -1,20 +1,19 @@
 package com.cs.on.icamera.cctv.swing;
 
-import com.cs.on.icamera.cctv.onvif.OnvifNetworkScan;
+import com.cs.on.icamera.cctv.ffmpeg.FfmepgCctvVerification;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class NetworkScanWindow {
-
+public class VerifyCctvWindow {
 	private final JFrame frame;
 	private final JProgressBar progressBar;
 	private Timer timer;
 
-	public NetworkScanWindow() {
-		frame = new JFrame("Scanning Network");
+	public VerifyCctvWindow() {
+		frame = new JFrame("Verifying CCTVs");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setSize(640, 480);
 		frame.setLayout(new BorderLayout());
@@ -23,22 +22,22 @@ public class NetworkScanWindow {
 		progressBar.setStringPainted(true);
 		frame.add(progressBar, BorderLayout.CENTER);
 
-		startNetworkScan();
+		verify();
 
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
-	private void startNetworkScan() {
+	private void verify() {
 		TimerTask task = new TimerTask() {
 			@Override
 			public void run() {
-				progressBar.setValue(OnvifNetworkScan.progress());
+				progressBar.setValue(FfmepgCctvVerification.progress());
 
-				if (OnvifNetworkScan.isComplete()) {
+				if (FfmepgCctvVerification.isComplete()) {
 					timer.cancel();
 					frame.dispose();
-					new IdentifiedCctvWindow();
+					new ExportExcelWindow();
 				}
 			}
 		};
@@ -46,6 +45,6 @@ public class NetworkScanWindow {
 		timer = new Timer();
 		timer.scheduleAtFixedRate(task, 0, 5000);
 
-		new Thread(OnvifNetworkScan::scan).start();
+		new Thread(FfmepgCctvVerification::verify).start();
 	}
 }
