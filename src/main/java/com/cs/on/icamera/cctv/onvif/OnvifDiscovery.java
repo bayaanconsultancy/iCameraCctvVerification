@@ -89,8 +89,6 @@ public class OnvifDiscovery {
 	public static void discover() {
 		logger.debug("Starting ONVIF device discovery.");
 
-		System.setProperty("java.net.preferIPv4Stack", "true");
-
 		for (NetworkInterface networkInterface : Network.getNetworkInterfaces()) {
 			currentInterfaceName = networkInterface.getName();
 			logger.info("Discovering ONVIF devices on interface {}", networkInterface);

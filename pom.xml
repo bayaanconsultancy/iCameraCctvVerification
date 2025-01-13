@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
     <artifactId>iCameraCctvVerification</artifactId>
     <version>1.0</version>
     <description>
-        This project is a tool to verify the configuration of the of CCTVs with iCamera.
+        This project is a tool to verify the configuration of the of CCTVs with
+        iCamera.
     </description>
 
     <organization>
@@ -17,9 +18,12 @@
     <inceptionYear>2025</inceptionYear>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-shaded-jar-name>cv</maven-shaded-jar-name>
+        <main-class>com.cs.on.icamera.cctv.Main</main-class>
     </properties>
 
     <dependencies>
@@ -68,13 +72,37 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-jre</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jre</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${jre.path}</directory>
+                                    <targetPath>.</targetPath>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-transform-maven-shade-plugin-extensions</artifactId>
+                        <artifactId>
+                            log4j-transform-maven-shade-plugin-extensions
+                        </artifactId>
                         <version>0.2.0</version>
                     </dependency>
                 </dependencies>
@@ -85,23 +113,23 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>cv</finalName>
+                            <finalName>${maven-shaded-jar-name}</finalName>
                             <transformers>
                                 <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>com.cs.on.icamera.cctv.Main</Main-Class>
+                                        <Main-Class>${main-class}</Main-Class>
                                         <Multi-Release>true</Multi-Release>
                                     </manifestEntries>
                                 </transformer>
                                 <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer" />
+                                        implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
                                 <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer" />
+                                        implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer"/>
                                 <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                                        implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
                                     <resources>
                                         <resource>META-INF/MANIFEST.MF</resource>
                                         <resource>META-INF/DEPENDENCIES</resource>
@@ -148,13 +176,21 @@
                         </goals>
                         <configuration>
                             <headerType>console</headerType>
-                            <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
-                            <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
-                            <errTitle>${project.name}</errTitle>
-                            <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+                            <jar>
+                                ${project.build.directory}/${maven-shaded-jar-name}.jar
+                            </jar>
+                            <outfile>${project.build.directory}/${outfile.name}</outfile>
+                            <errTitle>${project.name} - Error</errTitle>
                             <classPath>
-                                <mainClass>com.cs.on.icamera.cctv.Main</mainClass>
+                                <mainClass>${main-class}</mainClass>
                             </classPath>
+                            <jre>
+                                <path>jre</path>
+                                <minVersion>21</minVersion>
+                                <opts>
+                                    <opt>-Djava.net.preferIPv4Stack=true</opt>
+                                </opts>
+                            </jre>
                             <icon>src/main/resources/logo.ico</icon>
                         </configuration>
                     </execution>
@@ -162,4 +198,58 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>windows-x64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <target.os>win</target.os>
+                <target.arch>x64</target.arch>
+                <jre.path>
+                    ${project.basedir}/jre/${java.version}/${target.arch}/${target.os}
+                </jre.path>
+                <outfile.name>${project.build.finalName}-${target.arch}.exe</outfile.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows-arm64</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <target.os>win</target.os>
+                <target.arch>arm64</target.arch>
+                <jre.path>
+                    ${project.basedir}/jre/${java.version}/${target.arch}/${target.os}
+                </jre.path>
+                <outfile.name>${project.build.finalName}-${target.arch}.exe</outfile.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>mac-arm64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <properties>
+                <target.os>win</target.os>
+                <target.arch>arm64</target.arch>
+                <jre.path>
+                    ${project.basedir}/jre/${java.version}/${target.arch}/${target.os}
+                </jre.path>
+                <outfile.name>${project.build.finalName}-${target.arch}.exe</outfile.name>
+            </properties>
+        </profile>
+    </profiles>
 </project>

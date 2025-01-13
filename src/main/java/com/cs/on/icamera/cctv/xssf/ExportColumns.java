@@ -4,14 +4,11 @@ public enum ExportColumns implements Columns {
     CCTV_NAME(1, "CCTV Name", String.class, "getName", "setName"),
     CCTV_IP(2, "IP Address", String.class, "getIp", "setIp"),
     INSIDE_ROOM(3, "Inside Room", Boolean.class, "isInsideRoom", "insideRoom"),
-    USERNAME(4, "Username", String.class, "getUsername", "setUsername"),
-    PASSWORD(5, "Password", String.class, "getPassword", "setPassword"),
-    RTSP_PORT(6, "RTSP Port", Integer.class, "getPort", "setPort"),
-    RTSP_MAIN_URL(7, "Main Stream URL", String.class, "getMainStreamUrl", "setMainStreamUrl"),
-    RTSP_SUB_URL(8, "Sub Stream URL", String.class, "getSubStreamUrl", "setSubStreamUrl"),
-    MAKE_MODEL(9, "Make - Model", String.class, "getMakeModel", "setMakeModel"),
-    SERIAL_N0(10, "Serial No", String.class, "getSerialNumber", "setSerialNumber"),
-    ERROR(11, "Error Message", String.class, "getError", "setError");
+    RTSP_PORT(4, "RTSP Port", Integer.class, "getPort", "setPort"),
+    RTSP_MAIN_URL(5, "Main Stream URL", String.class, "getMainStreamUrl", "setMainStreamUrl"),
+    RTSP_SUB_URL(6, "Sub Stream URL", String.class, "getSubStreamUrl", "setSubStreamUrl"),
+    MAKE_MODEL(7, "Make - Model", String.class, "getMakeModel", "setMakeModel"),
+    SERIAL_N0(8, "Serial No", String.class, "getSerialNumber", "setSerialNumber");
 
     private final int index;
     private final String name;
