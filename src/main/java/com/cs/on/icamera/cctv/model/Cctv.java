@@ -13,264 +13,330 @@ import java.util.List;
 import static com.cs.on.icamera.cctv.util.UrlParser.addCredentialsToRtspUrl;
 
 public class Cctv {
-	private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-			.registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
-	private final List<String> error; // Error Message
-	private final List<Profile> profiles; // RTSP Port, Main Stream URL, Sub Stream URL
-	private final OnvifInfo onvifInfo;
-	private Long id;
-	private String ip; // IP Address
-	private String name; // CCTV Name
-	private String make; // Make - Model*
-	private String model; // Make - Model*
-	private String serialNumber; // Serial No
-	private Boolean insideRoom; // Inside Room
-	private String onvifUrl;
+    private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").registerTypeAdapter(Throwable.class, new ThrowableTypeAdapter()).create();
+    private final List<String> error; // Error Message
+    private final List<Profile> profiles; // RTSP Port, Main Stream URL, Sub Stream URL
+    private final OnvifInfo onvifInfo;
+    private Long id;
+    private String ip; // IP Address
+    private String name; // CCTV Name
+    private String make; // Make - Model*
+    private String model; // Make - Model*
+    private String serialNumber; // Serial No
+    private Boolean insideRoom; // Inside Room
+    private String onvifUrl;
 
-	public Cctv() {
-		this.profiles = new ArrayList<>();
-		this.onvifInfo = new OnvifInfo();
-		this.error = new ArrayList<>();
-	}
+    public Cctv() {
+        this.profiles = new ArrayList<>();
+        this.onvifInfo = new OnvifInfo();
+        this.error = new ArrayList<>();
+    }
 
-	public Cctv addProfile(Profile profile) {
-		this.profiles.add(profile);
-		return this;
-	}
+    private <T> T checkNull(T value, String fieldName) {
+        if (value == null) {
+            this.error.add(fieldName + " cannot be blank. Please provide " + fieldName + ".");
+        }
+        return value;
+    }
 
-	public String getError() {
-		StringBuilder sb = new StringBuilder();
-		List<String> e = new HashSet<>(error).stream().toList();
-		for (int i = 0; i < e.size(); i++) {
-			sb.append(i + 1).append(". ").append(e.get(i)).append(" \n");
-		}
-		return sb.toString();
-	}
 
-	public Long getId() {
-		return id;
-	}
+    public Cctv addProfile(Profile profile) {
+        this.profiles.add(profile);
+        return this;
+    }
 
-	public String getIp() {
-		return ip;
-	}
+    public String getError() {
+        StringBuilder sb = new StringBuilder();
+        List<String> e = new HashSet<>(error).stream().toList();
+        for (int i = 0; i < e.size(); i++) {
+            sb.append(i + 1).append(". ").append(e.get(i)).append(" \n");
+        }
+        return sb.toString();
+    }
 
-	public String getMainStreamUrl() {
-		return getStreamUrl("Main");
-	}
+    public void addError(Exception e) {
+        this.error.add(e.getCause() == null ? e.getMessage() : e.getCause().getMessage());
+    }
 
-	public String getMake() {
-		return make;
-	}
+    public void addError(String e) {
+        this.error.add(e);
+    }
 
-	public String getMakeModel() {
-		return (make == null ? "" : make) + ((make != null && model != null) ? " - " : "")
-				+ (model == null ? "" : model);
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getModel() {
-		return model;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getIp() {
+        if (ip == null) {
+            try {
+                return UrlParser.getHostname(onvifUrl);
+            } catch (OnvifException e) {
+                // Handle or log the exception if needed
+            }
+        }
+        return ip;
+    }
 
-	public String getOnvifUrl() {
-		return onvifUrl;
-	}
+    public void setIp(String ip) {
+        this.ip = checkNull(ip, "CCTV IP Address");
+    }
 
-	public String getPassword() {
-		return onvifInfo.password();
-	}
+    public String getMainStreamUrl() {
+        return getStreamUrl("Main");
+    }
 
-	public int getPort() {
-		try {
-			return UrlParser.getPort(profiles.getFirst().streamUri());
-		} catch (Exception e) {
-			return 554;
-		}
-	}
+    public void setMainStreamUrl(String streamUri) {
+        if (checkNull(streamUri, "Main Stream URL") != null)
+            this.profiles.add(new Profile().setName("Main").setStreamUri(streamUri.trim()));
+    }
 
-	public List<Profile> getProfiles() {
-		return profiles;
-	}
+    public String getMake() {
+        return make;
+    }
 
-	public String getSerialNumber() {
-		return serialNumber;
-	}
+    public void setMake(String make) {
+        this.make = make;
+    }
 
-	private String getStreamUrl(String streamType) {
-		for (Profile profile : profiles) {
-			if (profile.name().equals(streamType)) {
-				try {
-					return addCredentialsToRtspUrl(profile.streamUri(), onvifInfo.username(), onvifInfo.password());
-				} catch (OnvifException e) {
-					setError(e);
-				}
-			}
-		}
-		return "";
-	}
+    public String getMakeModel() {
+        String trimmedMake = (make == null ? "" : make.trim());
+        String trimmedModel = (model == null ? "" : model.trim());
 
-	public String getSubStreamUrl() {
-		return getStreamUrl("Sub");
-	}
+        return trimmedMake.isEmpty() || trimmedModel.isEmpty() ? trimmedMake + trimmedModel : trimmedMake + " - " + trimmedModel;
+    }
 
-	public String getUsername() {
-		return onvifInfo.username();
-	}
+    public void setMakeModel(String makeModel) {
+        if (makeModel == null || makeModel.isBlank()) {
+            this.setMake("");
+            this.setModel("");
+            return;
+        }
 
-	public void insideRoom(Boolean insideRoom) {
-		this.insideRoom = insideRoom;
-	}
+        String[] parts = makeModel.split("-", 2); // Limit the split to 2 parts
+        this.setMake(parts.length > 0 && parts[0] != null ? parts[0].trim() : "");
+        this.setModel(parts.length > 1 && parts[1] != null ? parts[1].trim() : "");
+    }
 
-	public void insideRoom(Object insideRoom) {
-		this.insideRoom = insideRoom != null && String.valueOf(insideRoom).toLowerCase().matches("y|yes|true|t");
-	}
+    public String getModel() {
+        return model;
+    }
 
-	public Boolean isInsideRoom() {
-		return insideRoom;
-	}
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-	public OnvifInfo onvifInfo() {
-		return onvifInfo;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setError(Exception e) {
-		this.error.add(e.getCause().getMessage());
-	}
+    public void setName(String name) {
+        this.name = checkNull(name, "CCTV Name");
+    }
 
-	public void setError(String e) {
-		// No need tp set the error from a string, it is dummy method get called from
-		// Excel upload.
-	}
+    public String getOnvifUrl() {
+        return onvifUrl;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setOnvifUrl(String onvifUrl) {
+        this.onvifUrl = onvifUrl;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    public String getPassword() {
+        return onvifInfo.password();
+    }
 
-	public void setIpPort(String streamUri) throws OnvifException {
-		this.setIp(UrlParser.getHostname(streamUri));
-	}
+    public void setPassword(String password) {
+        this.onvifInfo.setPassword(checkNull(password, "Password"));
+    }
 
-	public void setMainStreamUrl(String streamUri) {
-		this.profiles.add(new Profile().setName("Main").setStreamUri(streamUri));
-	}
+    public int getPort() {
+        try {
+            return UrlParser.getPort(profiles.getFirst().streamUri());
+        } catch (Exception e) {
+            return 554;
+        }
+    }
 
-	public void setMake(String make) {
-		this.make = make;
-	}
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
 
-	public void setMakeModel(String makeModel) {
-		String[] parts = makeModel.split(" - ");
-		this.setMake(parts[0]);
-		this.setModel(parts[1]);
-	}
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles.addAll(profiles);
+        for (int i = 0; i < profiles.size(); i++) {
+            Profile profile = profiles.get(i);
+            if (i % 2 == 0) {
+                profile.setName("Main");
+            } else {
+                profile.setName("Sub");
+            }
+        }
+    }
 
-	public void setModel(String model) {
-		this.model = model;
-	}
+    public String getSerialNumber() {
+        return serialNumber;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = checkNull(serialNumber, "Serial Number");
+    }
 
-	public void setOnvifPassword(String password) {
-		this.onvifInfo.setPassword(password);
-	}
+    private String getStreamUrl(String streamType) {
+        for (Profile profile : profiles) {
+            if (profile.name().equals(streamType)) {
+                try {
+                    return addCredentialsToRtspUrl(profile.streamUri(), onvifInfo.username(), onvifInfo.password());
+                } catch (Exception e) {
+                    addError(e);
+                }
+            }
+        }
+        return "";
+    }
 
-	public void setOnvifUrl(String onvifUrl) {
-		this.onvifUrl = onvifUrl;
-	}
+    private Profile getStreamProfile(String streamType) {
+        for (Profile profile : profiles) {
+            if (profile.name().equals(streamType)) {
+                return profile;
+            }
+        }
+        return null;
+    }
 
-	public void setOnvifUsername(String username) {
-		this.onvifInfo.setUsername(username);
-	}
+    public Profile getMainStreamProfile() {
+        return getStreamProfile("Main");
+    }
 
-	public void setPassword(String password) {
-		this.onvifInfo.setPassword(password);
-	}
+    public Profile getSubStreamProfile() {
+        return getStreamProfile("Sub");
+    }
 
-	public void setProfiles(List<Profile> profiles) {
-		this.profiles.addAll(profiles);
-		for (int i = 0; i < profiles.size(); i++) {
-			Profile profile = profiles.get(i);
-			if (i % 2 == 0) {
-				profile.setName("Main");
-			} else {
-				profile.setName("Sub");
-			}
-		}
-	}
+    public String getSubStreamUrl() {
+        return getStreamUrl("Sub");
+    }
 
-	public void setSerialNumber(String serialNumber) {
-		this.serialNumber = serialNumber;
-	}
+    public void setSubStreamUrl(String streamUri) {
+        if (checkNull(streamUri, "Sub Stream URL") != null)
+            this.profiles.add(new Profile().setName("Sub").setStreamUri(streamUri.trim()));
+    }
 
-	public void setSubStreamUrl(String streamUri) {
-		this.profiles.add(new Profile().setName("Sub").setStreamUri(streamUri));
-	}
+    public String getUsername() {
+        return onvifInfo.username();
+    }
 
-	public void setUsername(String username) {
-		this.onvifInfo.setUsername(username);
-	}
+    public void setUsername(String username) {
+        this.onvifInfo.setUsername(checkNull(username, "Username"));
+    }
 
-	public boolean success() {
-		return error.isEmpty();
-	}
+    public void insideRoom(Boolean insideRoom) {
+        this.insideRoom = checkNull(insideRoom, "Inside Room Flag");
+    }
 
-	@Override
-	public String toString() {
-		return gson.toJson(this);
-	}
+    public Boolean isInsideRoom() {
+        return insideRoom;
+    }
 
-	public Cctv withId(Long id) {
-		this.setId(id);
-		return this;
-	}
+    public OnvifInfo onvifInfo() {
+        return onvifInfo;
+    }
 
-	public Cctv withInsideRoom(Boolean insideRoom) {
-		this.insideRoom(insideRoom);
-		return this;
-	}
+    public void noNeedToSetError(String error) {
+        // No need tp set the error from a string, it is dummy method get called from Excel upload.
+    }
 
-	public Cctv withIp(String ip) {
-		this.setIp(ip);
-		return this;
-	}
+    public void setIpPort(String streamUri) throws OnvifException {
+        this.setIp(UrlParser.getHostname(streamUri));
+    }
 
-	public Cctv withMake(String make) {
-		this.setMake(make);
-		return this;
-	}
+    public void setOnvifPassword(String password) {
+        this.onvifInfo.setPassword(password);
+    }
 
-	public Cctv withModel(String model) {
-		this.setModel(model);
-		return this;
-	}
+    public void setOnvifUsername(String username) {
+        this.onvifInfo.setUsername(username);
+    }
 
-	public Cctv withName(String name) {
-		this.setName(name);
-		return this;
-	}
+    public boolean success() {
+        return error.isEmpty();
+    }
 
-	public Cctv withOnvifDeviceUrl(String onvifAddress) {
-		this.setOnvifUrl(onvifAddress);
-		return this;
-	}
+    @Override
+    public String toString() {
+        return gson.toJson(this);
+    }
 
-	public Cctv withProfiles(List<Profile> profiles) {
-		this.setProfiles(profiles);
-		return this;
-	}
+    public Cctv withId(Long id) {
+        this.setId(id);
+        return this;
+    }
 
-	public Cctv withSerialNumber(String serialNumber) {
-		this.setSerialNumber(serialNumber);
-		return this;
-	}
+    public Cctv withInsideRoom(Boolean insideRoom) {
+        this.insideRoom(insideRoom);
+        return this;
+    }
+
+    public Cctv withIp(String ip) {
+        this.setIp(ip);
+        return this;
+    }
+
+    public Cctv withMake(String make) {
+        this.setMake(make);
+        return this;
+    }
+
+    public Cctv withModel(String model) {
+        this.setModel(model);
+        return this;
+    }
+
+    public Cctv withName(String name) {
+        this.setName(name);
+        return this;
+    }
+
+    public Cctv withOnvifDeviceUrl(String onvifAddress) {
+        this.setOnvifUrl(onvifAddress);
+        return this;
+    }
+
+    public Cctv withProfiles(List<Profile> profiles) {
+        this.setProfiles(profiles);
+        return this;
+    }
+
+    public Cctv withSerialNumber(String serialNumber) {
+        this.setSerialNumber(serialNumber);
+        return this;
+    }
+
+    public void clearErrors() {
+        this.error.clear();
+    }
+
+    public void clearCredential() {
+        this.onvifInfo.setUsername(null);
+        this.onvifInfo.setPassword(null);
+    }
+
+    public String getSubStreamUri() {
+        return getStreamUri("Sub");
+    }
+
+    public String getMainStreamUri() {
+        return getStreamUri("Main");
+    }
+
+    private String getStreamUri(String streamType) {
+        for (Profile profile : profiles) {
+            if (profile.name().equals(streamType)) {
+                return profile.streamUri();
+            }
+        }
+        return "";
+    }
 }

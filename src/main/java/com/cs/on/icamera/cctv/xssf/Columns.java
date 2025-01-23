@@ -2,13 +2,13 @@ package com.cs.on.icamera.cctv.xssf;
 
 public interface Columns {
 
-	int index();
+    int index();
 
-	String colName();
+    String colName();
 
-	Class<?> type();
+    Class<?> type();
 
-	String getter();
+    String getter();
 
-	String setter();
+    String setter();
 }

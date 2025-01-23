@@ -14,38 +14,38 @@ import java.nio.charset.StandardCharsets;
 
 public class HttpSoapClient {
 
-	/**
-	 * Post a SOAP XML request to the given URL.
-	 *
-	 * @param url The URL to post to.
-	 * @param xml The SOAP XML request.
-	 * @return The response from the server.
-	 * @throws OnvifException If there is an error posting the request.
-	 */
-	public static String postXml(String url, String xml) throws OnvifException {
-		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-			// Set up the HTTP POST request
-			HttpPost httpPost = new HttpPost(url);
-			httpPost.setHeader("Content-Type", "application/soap+xml; charset=UTF-8");
+    /**
+     * Post a SOAP XML request to the given URL.
+     *
+     * @param url The URL to post to.
+     * @param xml The SOAP XML request.
+     * @return The response from the server.
+     * @throws OnvifException If there is an error posting the request.
+     */
+    public static String postXml(String url, String xml) throws OnvifException {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            // Set up the HTTP POST request
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Content-Type", "application/soap+xml; charset=UTF-8");
 
-			// Set the request body to the SOAP XML
-			StringEntity entity = new StringEntity(xml, StandardCharsets.UTF_8);
-			httpPost.setEntity(entity);
+            // Set the request body to the SOAP XML
+            StringEntity entity = new StringEntity(xml, StandardCharsets.UTF_8);
+            httpPost.setEntity(entity);
 
-			try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
-				HttpEntity responseEntity = response.getEntity();
+            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+                HttpEntity responseEntity = response.getEntity();
 
-				// If there is no response, return null
-				if (responseEntity == null)
-					return null;
-				else {
-					// Otherwise return the response as a string
-					return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
-				}
-			}
-		} catch (IOException e) {
-			// If there is an error, throw an OnvifException
-			throw new OnvifException(e);
-		}
-	}
+                // If there is no response, return null
+                if (responseEntity == null)
+                    return null;
+                else {
+                    // Otherwise return the response as a string
+                    return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
+                }
+            }
+        } catch (IOException e) {
+            // If there is an error, throw an OnvifException
+            throw new OnvifException(e);
+        }
+    }
 }

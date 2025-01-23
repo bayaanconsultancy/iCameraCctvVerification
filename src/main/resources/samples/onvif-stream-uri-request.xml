@@ -5,13 +5,19 @@
                   xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
             <wsse:UsernameToken wsu:Id="usernameToken">
                 <wsse:Username>admin</wsse:Username>
-                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">dComtB1X0+0czEcuclLBC8euVW8=</wsse:Password>
-                <wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">7a6AGxTQHnNDTELxnMfZ9A==</wsse:Nonce>
+                <wsse:Password
+                        Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+                    dComtB1X0+0czEcuclLBC8euVW8=
+                </wsse:Password>
+                <wsse:Nonce
+                        EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+                    7a6AGxTQHnNDTELxnMfZ9A==
+                </wsse:Nonce>
                 <wsu:Created>2025-01-01T05:44:50Z</wsu:Created>
             </wsse:UsernameToken>
         </Security>
     </soap:Header>
-    <soap:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <soap:Body>
         <wsdl:GetStreamUri xmlns="http://www.onvif.org/ver10/media/wsdl">
             <StreamSetup xmlns="http://www.onvif.org/ver10/schema">
                 <Stream xmlns="http://www.onvif.org/ver10/schema">RTP-Unicast</Stream>

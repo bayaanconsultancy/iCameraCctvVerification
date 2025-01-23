@@ -28,9 +28,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.bramp.ffmpeg</groupId>
-            <artifactId>ffmpeg</artifactId>
-            <version>0.8.0</version>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>1.5.11</version>
         </dependency>
         <dependency>
             <groupId>org.dom4j</groupId>
