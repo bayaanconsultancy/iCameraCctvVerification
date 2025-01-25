@@ -149,7 +149,7 @@ public class OnvifResponseParser {
             // If there is a Fault element, throw an OnvifException with the error text
             String code = fault.element("Code").element("Subcode").element("Value").getTextTrim();
             String reason = fault.element("Reason").element("Text").getTextTrim();
-            throw new OnvifException(code + ": " + reason);
+            throw new OnvifException(code.replaceFirst("ter:", "") + ": " + reason);
         }
 
         return body;

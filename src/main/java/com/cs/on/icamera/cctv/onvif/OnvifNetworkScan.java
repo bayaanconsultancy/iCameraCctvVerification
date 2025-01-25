@@ -18,6 +18,7 @@ public class OnvifNetworkScan {
     public static final Set<Integer> ONVIF_PORTS = Set.of(80, 8000, 8080);
     // Timeout for ONVIF port scans
     public static final int ONVIF_PORT_SCAN_TIMEOUT = 1000;
+
     private static final Logger logger = LogManager.getLogger(OnvifNetworkScan.class);
     private static NetworkScan scanner;
 
@@ -25,7 +26,16 @@ public class OnvifNetworkScan {
     }
 
     public static void scan() {
-        getLatentOnvifUrls().forEach(onvifUrl -> {
+        scan(Network.getInetAddressesInSubnet());
+    }
+
+    public static void scan(String ip1, String ip2) {
+        scan(Network.inetAddressesBetween(ip1, ip2));
+    }
+
+    private static void scan(Set<String> ips) {
+        logger.info("Scanning IPs {}", ips);
+        getLatentOnvifUrls(ips).forEach(onvifUrl -> {
             if (checkPossibleOnvifDevice(onvifUrl)) {
                 DataStore.addScannedCctv(new Cctv().withOnvifDeviceUrl(onvifUrl));
             }
@@ -34,11 +44,11 @@ public class OnvifNetworkScan {
         logger.info("Discovered {} ONVIF devices by network scan.", DataStore.getScannedCctvCount());
     }
 
-    private static Set<String> getLatentOnvifUrls() {
+    private static Set<String> getLatentOnvifUrls(Set<String> ips) {
         Set<String> onvifUrls = new HashSet<>();
         scanner = new NetworkScan(
                 // For all possible IP addresses of all network interfaces
-                Network.getInetAddressesInSubnet(),
+                ips,
                 // For all possible ONVIF ports
                 ONVIF_PORTS);
 
@@ -71,5 +81,13 @@ public class OnvifNetworkScan {
 
     public static boolean isComplete() {
         return scanner != null && scanner.isComplete();
+    }
+
+    public static int getTotalCount() {
+        return scanner == null ? 0 : scanner.getTotalCount();
+    }
+
+    public static int getCount() {
+        return scanner == null ? 0 : scanner.getCount();
     }
 }

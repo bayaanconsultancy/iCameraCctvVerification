@@ -76,8 +76,8 @@ public class Network {
         return addresses;
     }
 
-    public static List<String> inetAddressesBetween(String inetAddress1, String inetAddress2) {
-        List<String> ipAddresses = new ArrayList<>();
+    public static Set<String> inetAddressesBetween(String inetAddress1, String inetAddress2) {
+        Set<String> ipAddresses = new HashSet<>();
         try {
             if (!validator.isValidInet4Address(inetAddress1)) {
                 throw new Exception(String.format("Invalid IPv4 address '%s'.", inetAddress1));

@@ -99,16 +99,16 @@
       <plugin>
         <groupId>com.akathist.maven.plugins.launch4j</groupId>
         <artifactId>launch4j-maven-plugin</artifactId>
-        <version>2.5.2</version>
+        <version>2.1.2</version>
         <executions>
           <execution>
-            <id>l4j-client</id>
+            <id>l4j-cv</id>
             <phase>package</phase>
             <goals>
               <goal>launch4j</goal>
             </goals>
             <configuration>
-              <headerType>console</headerType>
+              <headerType>gui</headerType>
               <jar>${project.build.directory}/${maven-shaded-jar-name}.jar</jar>
               <outfile>${project.build.directory}/${outfile.name}</outfile>
               <errTitle>${project.name} - Error</errTitle>
@@ -117,7 +117,6 @@
               </classPath>
               <jre>
                 <path>jre</path>
-                <minVersion>21</minVersion>
                 <opts>
                   <opt>-Djava.net.preferIPv4Stack=true</opt>
                 </opts>
@@ -136,6 +135,7 @@
         <target.os>win</target.os>
         <outfile.name>${project.build.finalName}-${target.arch}.exe</outfile.name>
         <target.arch>x64</target.arch>
+        <ffmpeg.classifier>windows-x86_64</ffmpeg.classifier>
         <jre.path>${project.basedir}/jre/${java.version}/${target.arch}/${target.os}</jre.path>
       </properties>
     </profile>
@@ -145,6 +145,7 @@
         <target.os>win</target.os>
         <outfile.name>${project.build.finalName}-${target.arch}.exe</outfile.name>
         <target.arch>arm64</target.arch>
+        <ffmpeg.classifier>windows-x86_64</ffmpeg.classifier>
         <jre.path>${project.basedir}/jre/${java.version}/${target.arch}/${target.os}</jre.path>
       </properties>
     </profile>
@@ -154,6 +155,7 @@
         <target.os>win</target.os>
         <outfile.name>${project.build.finalName}-${target.arch}.exe</outfile.name>
         <target.arch>arm64</target.arch>
+        <ffmpeg.classifier>macosx-arm64</ffmpeg.classifier>
         <jre.path>${project.basedir}/jre/${java.version}/${target.arch}/${target.os}</jre.path>
       </properties>
     </profile>

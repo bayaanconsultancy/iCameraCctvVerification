@@ -27,11 +27,71 @@
     </properties>
 
     <dependencies>
+        <!-- JavaCV platform dependency with all transitive dependencies excluded -->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv-platform</artifactId>
             <version>1.5.11</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>openblas-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>opencv-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>flycapture-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>libdc1394-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>libfreenect-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>libfreenect2-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>librealsense-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>librealsense2-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>videoinput-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>artoolkitplus-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>leptonica-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bytedeco</groupId>
+                    <artifactId>tesseract-platform</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <!-- Include FFmpeg dependencies -->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>7.1-1.5.11</version>
+            <!-- Adjust classifier for OS -->
+            <classifier>${ffmpeg.classifier}</classifier>
+        </dependency>
+
         <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
@@ -171,16 +231,16 @@
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
-                <version>2.5.2</version>
+                <version>2.1.2</version>
                 <executions>
                     <execution>
-                        <id>l4j-client</id>
+                        <id>l4j-cv</id>
                         <phase>package</phase>
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
-                            <headerType>console</headerType>
+                            <headerType>gui</headerType>
                             <jar>
                                 ${project.build.directory}/${maven-shaded-jar-name}.jar
                             </jar>
@@ -191,7 +251,6 @@
                             </classPath>
                             <jre>
                                 <path>jre</path>
-                                <minVersion>21</minVersion>
                                 <opts>
                                     <opt>-Djava.net.preferIPv4Stack=true</opt>
                                 </opts>
@@ -216,6 +275,7 @@
             <properties>
                 <target.os>win</target.os>
                 <target.arch>x64</target.arch>
+                <ffmpeg.classifier>windows-x86_64</ffmpeg.classifier>
                 <jre.path>
                     ${project.basedir}/jre/${java.version}/${target.arch}/${target.os}
                 </jre.path>
@@ -233,6 +293,7 @@
             <properties>
                 <target.os>win</target.os>
                 <target.arch>arm64</target.arch>
+                <ffmpeg.classifier>windows-x86_64</ffmpeg.classifier>
                 <jre.path>
                     ${project.basedir}/jre/${java.version}/${target.arch}/${target.os}
                 </jre.path>
@@ -250,6 +311,7 @@
             <properties>
                 <target.os>win</target.os>
                 <target.arch>arm64</target.arch>
+                <ffmpeg.classifier>macosx-arm64</ffmpeg.classifier>
                 <jre.path>
                     ${project.basedir}/jre/${java.version}/${target.arch}/${target.os}
                 </jre.path>

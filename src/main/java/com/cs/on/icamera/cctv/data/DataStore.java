@@ -13,7 +13,7 @@ public class DataStore {
     private static final Logger logger = LogManager.getLogger(DataStore.class);
     private static final Map<String, Cctv> identifiedCctvs = new HashMap<>();
     private static final List<String> notAuthorizedOnvifUrls = new ArrayList<>();
-    private static List<Cctv> cctvsToVerify;
+    private static final List<Cctv> cctvsToVerify = new ArrayList<>();
     private static int discoveredCctvCount;
     private static int scannedCctvCount;
 
@@ -89,10 +89,11 @@ public class DataStore {
     }
 
     public static void setCctvsToVerify(List<Cctv> cctvs) {
-        cctvsToVerify = cctvs;
+        cctvsToVerify.clear();
+        cctvsToVerify.addAll(cctvs);
     }
 
-    public static List<Cctv> getCorrectCctvs() {
+    public static List<Cctv> getResources() {
         return cctvsToVerify.stream().filter(Cctv::success).toList();
     }
 

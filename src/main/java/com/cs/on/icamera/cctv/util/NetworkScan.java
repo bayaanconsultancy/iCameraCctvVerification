@@ -105,6 +105,14 @@ public class NetworkScan {
         return counter.isComplete();
     }
 
+    public int getTotalCount() {
+        return counter.total();
+    }
+
+    public int getCount() {
+        return counter.count();
+    }
+
     private record IpPort(String ip, Integer port) {
     }
 }
