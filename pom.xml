@@ -23,7 +23,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-shaded-jar-name>cv</maven-shaded-jar-name>
-        <main-class>com.cs.on.icamera.cctv.Main</main-class>
+        <main-class>com.tcs.ion.icamera.cctv.Main</main-class>
     </properties>
 
     <dependencies>
@@ -225,7 +225,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.cs.on.icamera.cctv.Main</mainClass>
+                    <mainClass>com.tcs.ion.icamera.cctv.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
