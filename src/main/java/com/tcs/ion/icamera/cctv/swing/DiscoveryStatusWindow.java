@@ -9,6 +9,7 @@ public class DiscoveryStatusWindow extends SwingWindow {
     public DiscoveryStatusWindow() {
         super("CCTV Discovery Status");
     }
+
     @Override
     protected void buildUiAndFunctionality() {
         int cctvCount = DataStore.getDiscoveredCctvCount();

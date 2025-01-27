@@ -12,8 +12,12 @@ import java.io.File;
 
 public class IdentifiedCctvWindow extends SwingWindow {
 
-    private  JTextField usernameField;
-    private  JPasswordField passwordField;
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+
+    public IdentifiedCctvWindow() {
+        super("CCTV Authentication");
+    }
 
     @Override
     protected void buildUiAndFunctionality() {
@@ -63,10 +67,6 @@ public class IdentifiedCctvWindow extends SwingWindow {
         SwingUtilities.invokeLater(passwordField::requestFocusInWindow);
     }
 
-    public IdentifiedCctvWindow()   {
-        super("CCTV Authentication");
-    }
-
     private void downloadExcelTemplate() {
         try {
             File file = saveExcelFile("iCamera-cctv-template");
@@ -75,7 +75,7 @@ public class IdentifiedCctvWindow extends SwingWindow {
                 showSuccessMessage("Excel template created successfully.");
             }
         } catch (Exception e) {
-            showErrorMessage( "Error creating excel template: " + e.getMessage());
+            showErrorMessage("Error creating excel template: " + e.getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ public class IdentifiedCctvWindow extends SwingWindow {
                 OnvifEnquiry.enquire();
 
                 if (DataStore.getUnauthorizedCctvCount() > 0) {
-                    next (new UsernamePasswordWindow());
+                    next(new UsernamePasswordWindow());
                 } else {
                     next(new DownloadTemplateWindow());
                 }

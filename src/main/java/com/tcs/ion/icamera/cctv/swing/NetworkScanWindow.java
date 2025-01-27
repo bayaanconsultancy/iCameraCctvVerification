@@ -7,6 +7,12 @@ import javax.swing.*;
 public class NetworkScanWindow extends SwingWindow {
 
     private final Runnable scanTask;
+
+    public NetworkScanWindow(Runnable scanTask) {
+        super("Scanning Network");
+        this.scanTask = scanTask;
+    }
+
     @Override
     protected void buildUiAndFunctionality() {
 
@@ -17,10 +23,5 @@ public class NetworkScanWindow extends SwingWindow {
         // Progress Bar
         JProgressBar progressBar = runWithProgress(statusLabel, scanTask, OnvifNetworkScan::progress, OnvifNetworkScan::getCount, OnvifNetworkScan::getTotalCount, OnvifNetworkScan::isComplete, new IdentifiedCctvWindow());
         add(progressBar);
-    }
-
-    public NetworkScanWindow(Runnable scanTask) {
-        super("Scanning Network");
-        this.scanTask = scanTask;
     }
 }

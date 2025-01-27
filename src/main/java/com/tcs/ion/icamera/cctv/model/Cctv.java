@@ -1,10 +1,10 @@
 package com.tcs.ion.icamera.cctv.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tcs.ion.icamera.cctv.error.OnvifException;
 import com.tcs.ion.icamera.cctv.error.ThrowableTypeAdapter;
 import com.tcs.ion.icamera.cctv.util.UrlParser;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.HashSet;

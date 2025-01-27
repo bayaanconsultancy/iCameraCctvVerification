@@ -42,13 +42,6 @@ public abstract class SwingWindow1 {
         textField.setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
         return textField;
     }
-    protected JPasswordField createPasswordField(int i) {
-        JPasswordField passwordField = new JPasswordField(i);
-        passwordField.setBackground(Color.WHITE);
-        passwordField.setForeground(FOREGROUND_COLOR);
-        passwordField.setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
-        return passwordField;
-    }
 
     protected static JTextArea createTextArea(int rows, int columns) {
         JTextArea textArea = new JTextArea(rows, columns);
@@ -74,6 +67,7 @@ public abstract class SwingWindow1 {
         ));
         return button;
     }
+
     protected static JButton createSkipButton(String text, String tooltip) {
         JButton button = new JButton(text);
         button.setToolTipText(tooltip);
@@ -87,6 +81,7 @@ public abstract class SwingWindow1 {
         ));
         return button;
     }
+
     public static JProgressBar createProgressBar() {
         JProgressBar progressBar = new JProgressBar(0, 100);
         progressBar.setStringPainted(true); // Display percentage
@@ -100,6 +95,13 @@ public abstract class SwingWindow1 {
         return scrollPane;
     }
 
+    protected JPasswordField createPasswordField(int i) {
+        JPasswordField passwordField = new JPasswordField(i);
+        passwordField.setBackground(Color.WHITE);
+        passwordField.setForeground(FOREGROUND_COLOR);
+        passwordField.setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
+        return passwordField;
+    }
 
     protected void add(Component... components) {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -188,6 +190,7 @@ public abstract class SwingWindow1 {
     protected void showSuccessMessage(String message) {
         JOptionPane.showMessageDialog(frame, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
+
     protected void showWarningMessage(String message) {
         JOptionPane.showMessageDialog(frame, message, "Warning", JOptionPane.WARNING_MESSAGE);
     }
@@ -195,6 +198,7 @@ public abstract class SwingWindow1 {
     protected void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
+
     protected File openExcelFile() {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files", "xls", "xlsx");
@@ -207,6 +211,7 @@ public abstract class SwingWindow1 {
         else
             return null;
     }
+
     protected void repaintFrame() {
         frame.repaint();
     }

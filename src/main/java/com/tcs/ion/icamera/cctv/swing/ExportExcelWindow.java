@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
-public class ExportExcelWindow  extends SwingWindow {
+public class ExportExcelWindow extends SwingWindow {
 
     private final List<Cctv> allCctvs;
     private final List<Cctv> okCctvs;

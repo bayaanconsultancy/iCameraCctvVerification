@@ -108,10 +108,12 @@ public class NetworkScan {
     }
 
     public int getTotalCount() {
-        return counter.total()/noOfPorts;
+        return counter.total() / noOfPorts;
     }
 
-    public int getCount() {        return counter.count()/noOfPorts;    }
+    public int getCount() {
+        return counter.count() / noOfPorts;
+    }
 
     private record IpPort(String ip, Integer port) {
     }

@@ -62,7 +62,7 @@ public class IPAddressInput extends SwingWindow {
                 // Sort IPs
                 Arrays.sort(ips);
 
-                SwingUtilities.invokeLater(() -> next(                    new NetworkScanWindow(() -> OnvifNetworkScan.scan(ips[0], ips[1]))));
+                SwingUtilities.invokeLater(() -> next(new NetworkScanWindow(() -> OnvifNetworkScan.scan(ips[0], ips[1]))));
             } catch (UnknownHostException ex) {
                 showErrorMessage("Provide valid IP addresses!");
             }

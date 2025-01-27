@@ -2,7 +2,7 @@ package com.tcs.ion.icamera.cctv.swing;
 
 import com.tcs.ion.icamera.cctv.onvif.OnvifDiscovery;
 
-public class DiscoveryWindow  extends SwingWindow {
+public class DiscoveryWindow extends SwingWindow {
     public DiscoveryWindow() {
         super("CCTV Discovery");
     }

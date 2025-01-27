@@ -11,9 +11,9 @@ import java.util.List;
 
 public class UsernamePasswordWindow extends SwingWindow {
 
-    private JPanel inputPanel;
     private final ArrayList<JTextField> usernameFields = new ArrayList<>();
     private final ArrayList<JPasswordField> passwordFields = new ArrayList<>();
+    private JPanel inputPanel;
     private int failedCctvCount = 0;
 
     public UsernamePasswordWindow() {

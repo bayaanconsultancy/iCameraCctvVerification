@@ -17,6 +17,10 @@ public class MainWindow extends SwingWindow {
         super("iCAMERA CCTV Verification Tool");
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new MainWindow().show());
+    }
+
     @Override
     protected void buildUiAndFunctionality() {
         JLabel titleLabel = createLabel("iCAMERA CCTV Verification Tool");
@@ -31,10 +35,6 @@ public class MainWindow extends SwingWindow {
         add(discoverButton);
         add(verifyButton);
 
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainWindow().show());
     }
 
     private void uploadExcelTemplate() {
