@@ -131,7 +131,7 @@ public abstract class SwingWindow {
         });
     }
 
-    public void next(SwingWindow1 sw) {
+    public void next(SwingWindow sw) {
         SwingUtilities.invokeLater(() -> {
             frame.dispose();
             sw.show();
@@ -165,7 +165,7 @@ public abstract class SwingWindow {
         return loadingDialog;
     }
 
-    protected JProgressBar runWithProgress(JLabel statusLabel, Runnable todo, IntSupplier progress, IntSupplier count, IntSupplier totalCount, BooleanSupplier isComplete, SwingWindow1 swingWindow) {
+    protected JProgressBar runWithProgress(JLabel statusLabel, Runnable todo, IntSupplier progress, IntSupplier count, IntSupplier totalCount, BooleanSupplier isComplete, SwingWindow swingWindow) {
         JProgressBar progressBar = createProgressBar();
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
