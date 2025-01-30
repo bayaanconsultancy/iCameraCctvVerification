@@ -2,6 +2,7 @@ package com.tcs.ion.icamera.cctv.ffmpeg;
 
 import com.tcs.ion.icamera.cctv.data.DataStore;
 import com.tcs.ion.icamera.cctv.model.Cctv;
+import com.tcs.ion.icamera.cctv.model.Profile;
 import com.tcs.ion.icamera.cctv.util.Counter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,7 +46,7 @@ public class CctvVerification {
         try {
             // TODO: Implement verification logic, no need to check for null, check for duplicate enries like name ip and stream url, and thrrowly verify feed.
 
-            RTSPProbe.grab(cctv);
+            Profile profile = RTSPProbe.grab(cctv);
 
         } catch (Exception e) {
             cctv.addError(e.getCause() == null ? e.getMessage() : e.getCause().getMessage());

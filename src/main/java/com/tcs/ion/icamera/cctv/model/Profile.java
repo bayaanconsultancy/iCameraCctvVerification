@@ -1,5 +1,7 @@
 package com.tcs.ion.icamera.cctv.model;
 
+import com.google.gson.Gson;
+
 public class Profile {
 
     private String name;
@@ -101,5 +103,10 @@ public class Profile {
     public Profile setBitrate(int bitrate) {
         this.bitrate = bitrate;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

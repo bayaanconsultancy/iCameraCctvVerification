@@ -4,11 +4,11 @@
   <groupId>org.example</groupId>
   <artifactId>iCameraCctvVerification</artifactId>
   <version>1.0</version>
-  <description>This project is a tool to verify the configuration of the of CCTVs with
-        iCamera.</description>
+  <description>This project is a tool to verify the configuration of the of CCTVs with iCamera.</description>
   <inceptionYear>2025</inceptionYear>
   <organization>
-    <name>Consultancy Services</name>
+    <name>Tata Consultancy Services</name>
+    <url>https://www.tcsion.com</url>
   </organization>
   <build>
     <plugins>
@@ -23,7 +23,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/jre</outputDirectory>
+              <outputDirectory>${project.build.directory}/${bundled-jre-path}</outputDirectory>
               <resources>
                 <resource>
                   <directory>${jre.path}</directory>
@@ -93,13 +93,13 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.tcs.ion.icamera.cctv.Main</mainClass>
+          <mainClass>${main-class}</mainClass>
         </configuration>
       </plugin>
       <plugin>
         <groupId>com.akathist.maven.plugins.launch4j</groupId>
         <artifactId>launch4j-maven-plugin</artifactId>
-        <version>2.1.2</version>
+        <version>2.5.2</version>
         <executions>
           <execution>
             <id>l4j-cv</id>
@@ -116,12 +116,24 @@
                 <mainClass>${main-class}</mainClass>
               </classPath>
               <jre>
-                <path>jre</path>
-                <opts>
-                  <opt>-Djava.net.preferIPv4Stack=true</opt>
-                </opts>
+                <path>./${bundled-jre-path}</path>
+                <minVersion>21</minVersion>
               </jre>
+              <downloadUrl>${project.organization.url}</downloadUrl>
               <icon>src/main/resources/logo.ico</icon>
+              <versionInfo>
+                <fileVersion>${lunch4j.file.version}</fileVersion>
+                <txtFileVersion>${lunch4j.file.version}</txtFileVersion>
+                <fileDescription>${project.description}</fileDescription>
+                <copyright>${project.organization.name}</copyright>
+                <productVersion>${lunch4j.file.version}</productVersion>
+                <txtProductVersion>${project.version}</txtProductVersion>
+                <productName>${project.name}</productName>
+                <companyName>${project.organization.name}</companyName>
+                <internalName>${project.name}</internalName>
+                <originalFilename>${outfile.name}</originalFilename>
+                <trademarks>TCS iON</trademarks>
+              </versionInfo>
             </configuration>
           </execution>
         </executions>
@@ -161,8 +173,10 @@
     </profile>
   </profiles>
   <properties>
+    <lunch4j.file.version>1.0.0.0</lunch4j.file.version>
     <java.version>21</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
+    <bundled-jre-path>cctv-discovery-library</bundled-jre-path>
     <main-class>com.tcs.ion.icamera.cctv.Main</main-class>
     <maven-shaded-jar-name>cv</maven-shaded-jar-name>
     <maven.compiler.target>${java.version}</maven.compiler.target>

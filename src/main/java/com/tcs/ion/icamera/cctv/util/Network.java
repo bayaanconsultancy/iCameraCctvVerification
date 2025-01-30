@@ -45,7 +45,7 @@ public class Network {
         try {
             for (NetworkInterface networkInterface : Collections.list(NetworkInterface.getNetworkInterfaces()))
                 for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses())
-                    if (networkInterface.isUp() && interfaceAddress.getAddress().isSiteLocalAddress())
+                    if (networkInterface.isUp() && networkInterface.supportsMulticast() && interfaceAddress.getAddress().isSiteLocalAddress())
                         addresses.add(networkInterface);
         } catch (Exception e) {
             logger.error("Error getting network interfaces:", e);
@@ -53,6 +53,15 @@ public class Network {
 
         logger.info("Network interfaces: {}", addresses);
         return addresses;
+    }
+
+    public static InetAddress getIPv4InetAddress(NetworkInterface networkInterface) {
+        return networkInterface.getInterfaceAddresses().stream()
+                .map(InterfaceAddress::getAddress)
+                .filter(Inet4Address.class::isInstance)
+                .map(Inet4Address.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No IPv4 address found on interface " + networkInterface));
     }
 
     public static Set<String> getInetAddressesInSubnet() {

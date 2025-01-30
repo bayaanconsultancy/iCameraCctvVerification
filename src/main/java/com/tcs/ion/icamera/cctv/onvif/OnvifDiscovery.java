@@ -118,8 +118,8 @@ public class OnvifDiscovery {
      * @param localPort        The free local port to bind the MulticastSocket to.
      */
     private static void discover(NetworkInterface networkInterface, int localPort) {
-        try (MulticastSocket socket = new MulticastSocket(localPort)) {
-            socket.setNetworkInterface(networkInterface);
+        try (MulticastSocket socket = new MulticastSocket(new InetSocketAddress(Network.getIPv4InetAddress(networkInterface), localPort))) {
+            socket.joinGroup(new InetSocketAddress(WS_DISCOVERY_MULTICAST_INET_ADDRESS, WS_DISCOVERY_MULTICAST_PORT), networkInterface);
             socket.setSoTimeout(WS_DISCOVERY_SOCKET_TIMEOUT);
             logger.debug("Created multicast socket on interface {}", currentInterfaceName);
 
