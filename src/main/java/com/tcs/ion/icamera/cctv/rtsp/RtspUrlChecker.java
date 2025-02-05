@@ -20,7 +20,7 @@ import java.util.concurrent.*;
  */
 public class RtspUrlChecker {
     private static final Logger logger = LogManager.getLogger(RtspUrlChecker.class);
-    private static final int TIMEOUT_IN_SECONDS = 3;
+    private static final int TIMEOUT_IN_SECONDS = 4;
     RtspUrlChecker() {
     }
 
@@ -53,7 +53,7 @@ public class RtspUrlChecker {
             future.cancel(true); // Cancel the task if it times out
             return false;
         } catch (InterruptedException | ExecutionException e) {
-            logger.warn("Error occurred while checking RTSP URL {} as {}", rtspUrl, e.getMessage());
+            logger.warn("Interrupt or execution exception occurred while checking RTSP URL {} as {}", rtspUrl, e.getMessage());
             return false;
         } finally {
             executor.shutdownNow(); // Shut down the executor

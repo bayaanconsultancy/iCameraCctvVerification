@@ -198,7 +198,7 @@ public class DataStore {
      *
      * @return the total number of identified CCTVs with either an ONVIF URL or an RTSP port
      */
-    public static int getRefuteCctvCount() {
-        return getRefuteOnvifCctvs().size() + getRefuteRtspCctvs().size();
+    public static long getRefuteCctvCount() {
+        return identifiedCctvs.values().stream().filter(cctv -> cctv.hasOnvifUrl() || cctv.hasRtspPort()).count();
     }
 }

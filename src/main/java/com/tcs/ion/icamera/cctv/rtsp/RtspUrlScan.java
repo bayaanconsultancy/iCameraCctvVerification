@@ -9,10 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -52,17 +49,20 @@ public class RtspUrlScan {
      * be used for validation, streaming setup, or other purposes.
      */
     private static void getRtspUrlPaths() {
-        mainStreamPaths.add(new RtspUrl("/live/channel0", "", ""));
-        subStreamPaths.add(new RtspUrl("/live/channel1", "", ""));
+        mainStreamPaths.clear();
+        subStreamPaths.clear();
+
+        mainStreamPaths.addAll(getRtspUrlPaths(Cctv::getMainStreamUrl));
+        subStreamPaths.addAll(getRtspUrlPaths(Cctv::getSubStreamUrl));
+
+        mainStreamPaths.add(new RtspUrl("/live/channel0", null, null));
+        subStreamPaths.add(new RtspUrl("/live/channel1", null, null));
 
         mainStreamPaths.add(new RtspUrl("/mainstream", "resolution=high", "auth=true"));
         subStreamPaths.add(new RtspUrl("/substream", "resolution=low", "auth=true"));
 
         mainStreamPaths.add(new RtspUrl("/live/main", "bitrate=2048", "token=secure"));
         subStreamPaths.add(new RtspUrl("/live/sub", "bitrate=512", "token=secure"));
-
-        mainStreamPaths.addAll(getRtspUrlPaths(Cctv::getMainStreamUrl));
-        subStreamPaths.addAll(getRtspUrlPaths(Cctv::getSubStreamUrl));
     }
 
     /**
@@ -100,21 +100,30 @@ public class RtspUrlScan {
         List<Cctv> cctvs = new ArrayList<>(DataStore.getRefuteRtspCctvs());
         logger.info("Starting RTSP scan for {} cctvs.", cctvs.size());
 
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        int threadCount = Math.min(cctvs.size(), Runtime.getRuntime().availableProcessors()) * 2;
+        logger.info("USING {} CONCURRENT THREADS.", threadCount);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
 
         for (Credential credential : credentials) {
-            List<Callable<Void>> tasks = cctvs.stream()
-                    .map(cctv -> (Callable<Void>) () -> {
-                        if (check(cctv, credential)) {
-                            synchronized (cctvs) {
-                                cctvs.remove(cctv);
-                            }
-                        }
-                        return null;
-                    }).toList();
+            logger.info("Processing CCTVs with credential: {}", credential);
+            List<Callable<Void>> tasks = cctvs.stream().map(cctv -> (Callable<Void>) () -> {
+                if (check(cctv, credential)) {
+                    synchronized (cctvs) {
+                        cctvs.remove(cctv);
+                    }
+                }
+                return null;
+            }).toList();
 
             try {
-                executorService.invokeAll(tasks);
+                List<Future<Void>> futures = executorService.invokeAll(tasks);
+                for (Future<Void> future : futures) {
+                    try {
+                        future.get(); // Wait for each task to complete
+                    } catch (ExecutionException e) {
+                        logger.error("Error occurred while processing CCTVs with credential: {}", credential, e);
+                    }
+                }
             } catch (InterruptedException e) {
                 logger.error("Error occurred while processing CCTVs with credential: {}", credential, e);
                 Thread.currentThread().interrupt();
@@ -138,12 +147,17 @@ public class RtspUrlScan {
      * If the streams are successfully located, the CCTV object is updated with the appropriate stream URLs
      * and credentials.
      *
-     * @param cctv the CCTV object to be validated and updated with stream URLs and credentials
+     * @param cctv       the CCTV object to be validated and updated with stream URLs and credentials
      * @param credential the credentials used to authenticate and locate RTSP streams for the CCTV
      * @return true if at least one stream URL is successfully found and updated for the CCTV, false otherwise
      */
     private static boolean check(Cctv cctv, Credential credential) {
-        if (cctv.hasProfile()) return true;
+        if (cctv.hasProfile()) {
+            logger.info("CCTV with IP {} already has profile(s).", cctv.getIp());
+            cctv.removeRtspPort();
+            return true;
+        }
+
         RtspUrl rtspUrl = new RtspUrl();
         rtspUrl.setHost(cctv.getIp());
         rtspUrl.setPort(cctv.getPort());
@@ -165,23 +179,25 @@ public class RtspUrlScan {
      * Checks the availability of an RTSP URL composed of the given RTSP host and path,
      * and sets the URL on the specified Cctv object if available.
      *
-     * @param cctv the Cctv object to update if the RTSP URL is available
+     * @param cctv     the Cctv object to update if the RTSP URL is available
      * @param rtspHost the RTSP host to be used in constructing the URL
      * @param rtspPath the RTSP path to be used in constructing the URL
-     * @param setter a BiConsumer to set the RTSP URL on the given Cctv object
+     * @param setter   a BiConsumer to set the RTSP URL on the given Cctv object
      * @return true if the RTSP URL is available and successfully set, false otherwise
      */
     private static boolean check(Cctv cctv, RtspUrl rtspHost, RtspUrl rtspPath, BiConsumer<Cctv, String> setter) {
         try {
             String rtspUrlStr = new RtspUrl(rtspHost, rtspPath).getRtspUrl();
-            logger.info("Trying to connect to RTSP URL: {}", rtspUrlStr);
+            logger.info("Is RTSP URL available: {}", rtspUrlStr);
             if (RtspUrlChecker.isRtspUrlAvailable(rtspUrlStr)) {
                 logger.info("RTSP URL is available: {}", rtspUrlStr);
                 setter.accept(cctv, rtspUrlStr);
                 return true;
+            } else {
+                logger.warn("RTSP URL is not available: {}", rtspUrlStr);
             }
         } catch (Exception e) {
-            logger.warn("Failed to connect to RTSP URL: {}", rtspHost, e);
+            logger.warn("Failed to check RTSP URL: {}", rtspHost, e);
         }
         return false;
     }

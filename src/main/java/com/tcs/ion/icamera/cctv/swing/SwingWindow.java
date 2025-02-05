@@ -188,13 +188,14 @@ public abstract class SwingWindow {
     }
 
     protected JProgressBar runWithProgress(JLabel statusLabel, Runnable todo, IntSupplier progress, IntSupplier count, IntSupplier totalCount, BooleanSupplier isComplete, Runnable next) {
+        String statusHead = statusLabel.getText();
         JProgressBar progressBar = createProgressBar();
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 progressBar.setValue(progress.getAsInt());
-                statusLabel.setText(String.format("Processed %d of %d.", count.getAsInt(), totalCount.getAsInt()));
+                statusLabel.setText(String.format("%s %d of %d.", statusHead, count.getAsInt(), totalCount.getAsInt()));
                 if (isComplete.getAsBoolean()) {
                     timer.cancel();
                     next.run();

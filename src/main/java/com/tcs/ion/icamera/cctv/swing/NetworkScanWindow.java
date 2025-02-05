@@ -28,8 +28,8 @@ public class NetworkScanWindow extends SwingWindow {
     protected void buildUiAndFunctionality() {
 
         // Status Label
-        JLabel onvifStatusLabel = createLabel("Starting network scan for ONVIF devices...");
-        JLabel rtspStatusLabel = createLabel("Starting network scan for RTSP devices...");
+        JLabel onvifStatusLabel = createLabel("Scanning for ONVIF devices:");
+        JLabel rtspStatusLabel = createLabel("Scanning for RTSP hosts:");
 
         // Progress Bar
         JProgressBar onvifProgressBar = runWithProgress(onvifStatusLabel, onvifScanTask, OnvifNetworkScan::getProgress, OnvifNetworkScan::getCount, OnvifNetworkScan::getTotalCount, OnvifNetworkScan::isComplete, this::next);

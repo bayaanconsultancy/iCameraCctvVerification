@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class RtspUrlParser {
     private RtspUrlParser() {
@@ -188,6 +189,25 @@ public class RtspUrlParser {
                    ", query='" + query + '\'' +
                    ", fragment='" + fragment + '\'' +
                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            RtspUrl rtspUrl = (RtspUrl) o;
+            return port == rtspUrl.port &&
+                   Objects.equals(username, rtspUrl.username) &&
+                   Objects.equals(password, rtspUrl.password) &&
+                   Objects.equals(host, rtspUrl.host) &&
+                   Objects.equals(path, rtspUrl.path) &&
+                   Objects.equals(query, rtspUrl.query) &&
+                   Objects.equals(fragment, rtspUrl.fragment);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(username, password, host, port, path, query, fragment);
         }
 
         public String getRtspUrl() throws URISyntaxException {

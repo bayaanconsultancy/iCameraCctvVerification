@@ -14,7 +14,7 @@ public class UsernamePasswordWindow extends SwingWindow {
     private final ArrayList<JTextField> usernameFields = new ArrayList<>();
     private final ArrayList<JPasswordField> passwordFields = new ArrayList<>();
     private JPanel inputPanel;
-    private int failedCctvCount = 0;
+    private long failedCctvCount = 0;
 
     public UsernamePasswordWindow() {
         super("Provide CCTV Credentials");
@@ -92,7 +92,7 @@ public class UsernamePasswordWindow extends SwingWindow {
             @Override
             protected void done() {
                 loadingDialog.dispose();
-                if (failedCctvCount > 1) {
+                if (failedCctvCount > 0) {
                     showWarningMessage("Failed to get details of " + failedCctvCount + " CCTV(s). Tou may try again with a different set of credentials.");
                     next(new UsernamePasswordWindow());
                 } else {
@@ -107,7 +107,7 @@ public class UsernamePasswordWindow extends SwingWindow {
     @Override
     protected void buildUiAndFunctionality() {
         // Label to display the count of unauthorized CCTVs
-        String countMessage = String.format("Unauthorized CCTV count is %d out of %d identified.", DataStore.getRefuteOnvifCctvCount(), DataStore.getIdentifiedCctvCount());
+        String countMessage = String.format("Unauthorized CCTV count is %d out of %d identified.", DataStore.getRefuteCctvCount(), DataStore.getIdentifiedCctvCount());
         JLabel cctvCountLabel = createLabel(countMessage);
         cctvCountLabel.setForeground(Color.RED);
 

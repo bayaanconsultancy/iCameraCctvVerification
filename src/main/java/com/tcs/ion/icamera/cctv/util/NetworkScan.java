@@ -18,7 +18,6 @@ public class NetworkScan {
 
     // Configuration constants
     private static final int DEFAULT_TIMEOUT = 1000;
-    private static final int NUMBER_OF_CONCURRENT_THREADS = 48;
 
     // Fields
     private final List<IpPort> ipPorts = new ArrayList<>();
@@ -60,7 +59,10 @@ public class NetworkScan {
             });
         }
 
-        try (ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_CONCURRENT_THREADS)) {
+        int threadCount = Math.min(ipPorts.size(), Runtime.getRuntime().availableProcessors()) * 4;
+        logger.info("USING {} CONCURRENT THREADS.", threadCount);
+
+        try (ExecutorService executorService = Executors.newFixedThreadPool(threadCount)) {
             // Submit tasks to executor
             logger.info("Scanning {} IP:Port combinations.", ipPorts.size());
             executorService.invokeAll(tasks);
