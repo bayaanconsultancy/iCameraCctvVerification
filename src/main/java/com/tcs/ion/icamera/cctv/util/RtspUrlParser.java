@@ -18,7 +18,6 @@ public class RtspUrlParser {
         }
 
         RtspUrl rtspUrl = new RtspUrl();
-        rtspUrl.setScheme("rtsp");
 
         // Extract username, password, host, port, path, query, and fragment
         String restUrl = url.substring(schemePart.length()); // Remove "rtsp://"
@@ -76,7 +75,7 @@ public class RtspUrlParser {
     }
 
     public static class RtspUrl {
-        private String scheme;
+        private final String scheme = "rtsp";
         private String username;
         private String password;
         private String host;
@@ -85,13 +84,28 @@ public class RtspUrlParser {
         private String query;
         private String fragment;
 
+        public RtspUrl() {
+        }
+
+        public RtspUrl(String path, String query, String fragment) {
+            setPath(path);
+            setQuery(query);
+            setFragment(fragment);
+        }
+
+        public RtspUrl(RtspUrl rtspUsernamePasswordHostPort, RtspUrl rtspPathQueryFragment) {
+            setUsername(rtspUsernamePasswordHostPort.getUsername());
+            setPassword(rtspUsernamePasswordHostPort.getPassword());
+            setHost(rtspUsernamePasswordHostPort.getHost());
+            setPort(rtspUsernamePasswordHostPort.getPort());
+            setPath(rtspPathQueryFragment.getPath());
+            setQuery(rtspPathQueryFragment.getQuery());
+            setFragment(rtspPathQueryFragment.getFragment());
+        }
+
         // Constructor, getters, and setters (omitted for brevity)
         public String getScheme() {
             return scheme;
-        }
-
-        public void setScheme(String scheme) {
-            this.scheme = scheme;
         }
 
         public String getUsername() {
@@ -131,7 +145,7 @@ public class RtspUrlParser {
         }
 
         public void setPath(String path) {
-            this.path = path == null ? "/" : (path.startsWith("/") ? path : ("/" + path));
+            this.path = path == null ? "/" : (path.startsWith("/") ? path : "/" + path);
         }
 
         public String getQuery() {
@@ -180,5 +194,7 @@ public class RtspUrlParser {
             String userInfo = (hasUsername() ? username + ":" : "") + (hasPassword() ? password : "");
             return URLDecoder.decode(new URI(scheme, userInfo, host, port, path, query, fragment).toString(), StandardCharsets.UTF_8);
         }
+
+
     }
 }

@@ -1,4 +1,3 @@
-package com.tcs.ion.icamera.cctv.onvif;
 /**
  * This package contains classes and interfaces related to ONVIF (Open Network
  * Video Interface Forum) communication for CCTV (Closed-Circuit Television)
@@ -19,3 +18,4 @@ package com.tcs.ion.icamera.cctv.onvif;
  * Utility classes, such as {@link HttpSoapClient}, support the HTTP SOAP
  * communication required for ONVIF operations.
  */
+package com.tcs.ion.icamera.cctv.onvif;

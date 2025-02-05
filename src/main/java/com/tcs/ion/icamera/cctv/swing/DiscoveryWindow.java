@@ -10,6 +10,6 @@ public class DiscoveryWindow extends SwingWindow {
     @Override
     protected void buildUiAndFunctionality() {
         add(createLabel("Discovering CCTVs. Please wait..."));
-        doInBackground(OnvifDiscovery::discover, () -> next(new DiscoveryStatusWindow()::show));
+        doInBackground(OnvifDiscovery::discover, () -> next(new DiscoveryStatusWindow()));
     }
 }

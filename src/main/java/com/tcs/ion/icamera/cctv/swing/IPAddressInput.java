@@ -1,7 +1,5 @@
 package com.tcs.ion.icamera.cctv.swing;
 
-import com.tcs.ion.icamera.cctv.onvif.OnvifNetworkScan;
-
 import javax.swing.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -62,7 +60,7 @@ public class IPAddressInput extends SwingWindow {
                 // Sort IPs
                 Arrays.sort(ips);
 
-                SwingUtilities.invokeLater(() -> next(new NetworkScanWindow(() -> OnvifNetworkScan.scan(ips[0], ips[1]))));
+                SwingUtilities.invokeLater(() -> next(new NetworkScanWindow(ips[0], ips[1])));
             } catch (UnknownHostException ex) {
                 showErrorMessage("Provide valid IP addresses!");
             }

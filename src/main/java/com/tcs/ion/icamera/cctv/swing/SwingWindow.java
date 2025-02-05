@@ -187,6 +187,26 @@ public abstract class SwingWindow {
         return progressBar;
     }
 
+    protected JProgressBar runWithProgress(JLabel statusLabel, Runnable todo, IntSupplier progress, IntSupplier count, IntSupplier totalCount, BooleanSupplier isComplete, Runnable next) {
+        JProgressBar progressBar = createProgressBar();
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                progressBar.setValue(progress.getAsInt());
+                statusLabel.setText(String.format("Processed %d of %d.", count.getAsInt(), totalCount.getAsInt()));
+                if (isComplete.getAsBoolean()) {
+                    timer.cancel();
+                    next.run();
+                }
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 1000);
+        new Thread(todo).start();
+        return progressBar;
+    }
+
     protected void showSuccessMessage(String message) {
         JOptionPane.showMessageDialog(frame, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }

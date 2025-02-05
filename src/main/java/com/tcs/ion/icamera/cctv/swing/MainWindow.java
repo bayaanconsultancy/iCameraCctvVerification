@@ -45,7 +45,7 @@ public class MainWindow extends SwingWindow {
                 if (cctvs.isEmpty()) {
                     throw new VerificationException("Excel file is empty.");
                 }
-                DataStore.setCctvsToVerify(cctvs);
+                DataStore.setExcelCctvs(cctvs);
                 next(new VerifyCctvWindow());
             }
         } catch (Exception e) {

@@ -28,6 +28,6 @@ public class Credential {
 
     @Override
     public String toString() {
-        return "Username: " + username + ", Password: " + (password == null ? "[blank]" : password);
+        return "Username: " + (username == null ? "[blank]" : ("`" + username + "`")) + ", Password: " + (password == null ? "[blank]" : ("`" + password + "`"));
     }
 }

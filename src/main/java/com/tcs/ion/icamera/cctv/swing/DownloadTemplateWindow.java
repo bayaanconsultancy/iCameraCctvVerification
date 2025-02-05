@@ -16,7 +16,7 @@ public class DownloadTemplateWindow extends SwingWindow {
     }
 
     private JTextArea getTextArea() {
-        int errorCount = DataStore.getOnvifErrorCount();
+        int errorCount = DataStore.getOnvifCctvErrorCount();
         JTextArea messageArea = createTextArea(6, 1);
         messageArea.setText("""
                 %s encountered while retrieving CCTV details and checking the RTSP feeds.

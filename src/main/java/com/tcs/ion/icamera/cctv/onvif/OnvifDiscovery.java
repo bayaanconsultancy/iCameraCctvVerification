@@ -16,10 +16,16 @@ import java.util.List;
 import static com.tcs.ion.icamera.cctv.data.DataStore.addDiscoveredCctv;
 import static com.tcs.ion.icamera.cctv.onvif.OnvifSoapMessages.WS_DISCOVERY_PROBE;
 
+/**
+ * Performs ONVIF device discovery to locate ONVIF-compatible devices
+ * on the network using WS-Discovery protocol. This class leverages
+ * multicast to communicate with devices and parse their responses
+ * to extract service URLs.
+ */
 public class OnvifDiscovery {
     private static final Logger logger = LogManager.getLogger(OnvifDiscovery.class);
-    private static final int WS_DISCOVERY_TIMEOUT = 8000;
-    private static final int WS_DISCOVERY_SOCKET_TIMEOUT = 4000;
+    private static final int WS_DISCOVERY_TIMEOUT = 4000;
+    private static final int WS_DISCOVERY_SOCKET_TIMEOUT = 2000;
     private static final int WS_DISCOVERY_MULTICAST_PORT = 3702;
     private static final String WS_DISCOVERY_MULTICAST_IP_ADDRESS = "239.255.255.250";
     private static final InetAddress WS_DISCOVERY_MULTICAST_INET_ADDRESS;
@@ -37,9 +43,15 @@ public class OnvifDiscovery {
     }
 
     /**
-     * Sends a datagram packet containing the specified data to the multicast group.
+     * Sends a WS-Discovery probe packet through the specified multicast socket.
+     * <p>
+     * This method is used to transmit a WS-Discovery probe message to a multicast
+     * group in order to discover ONVIF-compliant devices on the network. It
+     * constructs a `DatagramPacket` containing the probe message and sends it
+     * through the provided `MulticastSocket`.
      *
-     * @param socket the MulticastSocket through which the data will be sent
+     * @param socket the `MulticastSocket` used for sending the probe packet
+     * @throws IOException if an I/O error occurs while sending the packet
      */
     private static void sendData(MulticastSocket socket) {
         try {
@@ -55,11 +67,15 @@ public class OnvifDiscovery {
     }
 
     /**
-     * Receives a datagram packet from the multicast group.
+     * Receives data from a multicast group through the specified multicast socket.
+     * <p>
+     * This method creates a `DatagramPacket` to hold the incoming data and
+     * listens for data on the provided `MulticastSocket` instance. If an error
+     * occurs, such as a timeout or I/O problem, it logs an appropriate message
+     * and returns null.
      *
-     * @param socket the MulticastSocket object to receive the data through
-     * @return the received DatagramPacket object if successful, or null if there is
-     * an error
+     * @param socket the `MulticastSocket` used to receive data from the multicast group
+     * @return the received `DatagramPacket`, or null if an error occurs during the receiving process
      */
     private static DatagramPacket receiveData(MulticastSocket socket) {
         try {
@@ -84,7 +100,16 @@ public class OnvifDiscovery {
     }
 
     /**
-     * Performs ONVIF device discovery on all available network interfaces.
+     * Discovers ONVIF-compliant devices on all available network interfaces.
+     * <p>
+     * This method iterates through all available network interfaces that are up and
+     * capable of multicast communication. For each network interface, it attempts
+     * to discover ONVIF devices by invoking the `discover(NetworkInterface, int)` method
+     * with a free local port. If an error occurs during discovery on an interface,
+     * it is logged without interrupting the discovery process for other interfaces.
+     * <p>
+     * The method logs the start and end of the discovery process, and logs relevant
+     * information for each network interface being used in discovery.
      */
     public static void discover() {
         logger.debug("Starting ONVIF device discovery.");
@@ -103,19 +128,16 @@ public class OnvifDiscovery {
     }
 
     /**
-     * Performs ONVIF device discovery on a single network interface.
+     * Performs WS-Discovery to find ONVIF-compliant devices on a specific network interface
+     * and port using multicast communication.
      * <p>
-     * This method creates a MulticastSocket, sends the discovery data to the
-     * multicast group, waits for a while to receive all responses, and then
-     * processes the responses.
-     * <p>
-     * If an error occurs while creating the MulticastSocket, it logs an error
-     * message and returns.
-     * <p>
-     * If no ONVIF devices are found, it logs a warning message.
+     * This method establishes a multicast socket on the given network interface and local port,
+     * sends discovery packets to a defined multicast group, and waits for responses from
+     * ONVIF devices. The responses are processed and logged, and any errors during the
+     * discovery process are also logged.
      *
-     * @param networkInterface The network interface to discover ONVIF devices on.
-     * @param localPort        The free local port to bind the MulticastSocket to.
+     * @param networkInterface the network interface to perform the discovery on
+     * @param localPort        the local port to bind the multicast socket to
      */
     private static void discover(NetworkInterface networkInterface, int localPort) {
         try (MulticastSocket socket = new MulticastSocket(new InetSocketAddress(Network.getIPv4InetAddress(networkInterface), localPort))) {
@@ -146,11 +168,11 @@ public class OnvifDiscovery {
     }
 
     /**
-     * Parses the responses received from ONVIF devices, extracts their service
-     * addresses, and adds them to the discovered CCTV list.
+     * Parses a list of DatagramPacket objects to extract and process ONVIF device responses.
+     * This method processes each packet to identify ONVIF-compliant device addresses, adds
+     * the discovered devices to the data store, and logs the results.
      *
-     * @param packets The list of DatagramPacket objects containing the responses
-     *                from ONVIF devices.
+     * @param packets the list of DatagramPacket objects containing responses from ONVIF devices
      */
     private static void parseResponses(List<DatagramPacket> packets) {
         int discoveredCount = 0;

@@ -6,19 +6,31 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
-import java.util.TimeZone;
 
+/**
+ * The OnvifInfo class represents a data structure that holds information and utilities for
+ * interacting with ONVIF-compliant devices. It provides functionalities for generating
+ * necessary security headers for ONVIF requests, managing URLs for specific services,
+ * and handling user credentials and expiration details.
+ * <p>
+ * This class includes methods to generate a nonce, compute a password digest for secure
+ * authorization, and construct headers required for ONVIF requests. Additionally, the class
+ * allows for the storage and retrieval of URLs related to ONVIF services such as analytics,
+ * device management, events, imaging, media, and PTZ control.
+ * <p>
+ * Features such as user credential management, system date-time manipulation, and secure
+ * token generation are also covered.
+ * <p>
+ * The default username is initialized as "admin", and passwords can be set as needed.
+ * Created and expiration times for the security tokens are managed internally.
+ */
 public class OnvifInfo {
     private static final long EXPIRY_TIME_MILLIS = 300000;
-    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-    static {
-        DATE_FORMATTER.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
 
     private final byte[] nonce;
     private String analyticsUrl;
@@ -64,7 +76,7 @@ public class OnvifInfo {
     }
 
     public String created() {
-        return DATE_FORMATTER.format(created);
+        return DATE_FORMATTER.format(created.toInstant());
     }
 
     public String header() throws NoSuchAlgorithmException {
@@ -77,8 +89,7 @@ public class OnvifInfo {
                                 <wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">%s</wsse:Nonce>
                                 <wsu:Created>%s</wsu:Created>
                             </wsse:UsernameToken>
-                        </Security>"""
-                .formatted(username(), passwordDigest(), nonce(), created());
+                        </Security>""".formatted(username(), passwordDigest(), nonce(), created());
     }
 
     public String analyticsUrl() {
@@ -142,7 +153,7 @@ public class OnvifInfo {
     }
 
     public String expires() {
-        return DATE_FORMATTER.format(expires);
+        return DATE_FORMATTER.format(expires.toInstant());
     }
 
     public OnvifInfo setExpires(Date expires) {
@@ -176,9 +187,9 @@ public class OnvifInfo {
         return systemDateAndTime;
     }
 
-    public OnvifInfo setSystemDateAndTime(String systemDateAndTime) throws ParseException {
+    public OnvifInfo setSystemDateAndTime(String systemDateAndTime) {
         this.systemDateAndTime = systemDateAndTime;
-        setCreated(DATE_FORMATTER.parse(systemDateAndTime));
+        setCreated(Date.from(DATE_FORMATTER.parse(systemDateAndTime, java.time.Instant::from)));
         return this;
     }
 

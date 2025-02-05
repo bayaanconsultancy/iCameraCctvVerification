@@ -64,7 +64,9 @@ public class Workbook {
         Row headerRow = sheet.createRow(0);
         for (int i = 0; i < columns.length; i++) {
             headerRow.createCell(i).setCellValue(columns[i].colName());
+            sheet.autoSizeColumn(i);
         }
+        sheet.createFreezePane(0, 1);
     }
 
     // Writes data rows to the Excel sheet

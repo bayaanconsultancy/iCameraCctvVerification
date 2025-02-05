@@ -10,6 +10,13 @@ import java.util.List;
 
 import static com.tcs.ion.icamera.cctv.onvif.OnvifSoapMessages.ONVIF_GET_DEVICE_INFORMATION;
 
+/**
+ * A utility class to retrieve and set device information of an ONVIF-enabled CCTV.
+ * This includes fetching details such as make, model, and serial number of the device
+ * and updating the corresponding {@code Cctv} object.
+ * <p>
+ * This class is intended for use with ONVIF-compliant devices and relies on SOAP-based communication.
+ */
 public class OnvifDeviceInformation {
     private static final Logger logger = LogManager.getLogger(OnvifDeviceInformation.class);
 
@@ -17,11 +24,12 @@ public class OnvifDeviceInformation {
     }
 
     /**
-     * Get the device information of the ONVIF device at the given URL, and set the
-     * make, model and serial number of the Cctv object.
+     * Retrieves device information from an ONVIF-enabled CCTV device, including its make,
+     * model, and serial number, and updates the corresponding {@code Cctv} object.
      *
-     * @param cctv the Cctv object to update
-     * @throws OnvifException if there is an error making the request
+     * @param cctv the {@code Cctv} object representing the ONVIF device for which device
+     *             information needs to be fetched and updated.
+     * @throws OnvifException if an error occurs while retrieving or processing the device information.
      */
     public static void get(Cctv cctv) throws OnvifException {
         try {

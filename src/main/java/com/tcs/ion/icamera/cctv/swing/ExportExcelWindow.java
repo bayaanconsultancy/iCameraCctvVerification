@@ -13,14 +13,11 @@ import java.util.List;
 
 public class ExportExcelWindow extends SwingWindow {
 
-    private final List<Cctv> allCctvs;
-    private final List<Cctv> okCctvs;
+    private List<Cctv> allCctvs;
+    private List<Cctv> okCctvs;
 
     public ExportExcelWindow() {
         super("Export CCTV Details");
-
-        this.allCctvs = DataStore.getCctvsToVerify();
-        this.okCctvs = DataStore.getResources();
     }
 
 
@@ -57,6 +54,9 @@ public class ExportExcelWindow extends SwingWindow {
 
     @Override
     protected void buildUiAndFunctionality() {
+        this.allCctvs = DataStore.getExcelCctvs();
+        this.okCctvs = DataStore.getCameraResources();
+
         // Title Label
         JLabel titleLabel = createLabel("CCTV Export Utility");
         add(titleLabel);

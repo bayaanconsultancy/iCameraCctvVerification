@@ -10,6 +10,30 @@ import org.apache.logging.log4j.Logger;
 import static com.tcs.ion.icamera.cctv.onvif.OnvifSoapMessages.ONVIF_GET_PROFILES;
 import static com.tcs.ion.icamera.cctv.onvif.OnvifSoapMessages.ONVIF_GET_STREAM_URI;
 
+/**
+ * The OnvifProfiles class provides functionality to retrieve and process
+ * ONVIF profiles for a given CCTV device. It includes methods to fetch
+ * profiles from the media URL of the CCTV's ONVIF information and to parse
+ * the stream URI for each profile.
+ * <p>
+ * This class handles the communication with the device through HTTP SOAP
+ * requests, processes the responses, and updates the CCTV object with the
+ * retrieved profile and stream URI data.
+ * <p>
+ * This is a utility class and cannot be instantiated.
+ * <p>
+ * Methods:
+ * - get(Cctv cctv): Fetches ONVIF profiles and their associated stream URIs
+ *   for the specified CCTV device. It updates the provided CCTV object with
+ *   the retrieved data. Throws OnvifException in case of any errors during
+ *   the process.
+ * <p>
+ * Important Notes:
+ * - The method makes use of the CCTV's ONVIF information to construct and
+ *   send SOAP-based requests to the media URL.
+ * - The responses are parsed to retrieve the profile and stream URI details.
+ * - Any encountered exceptions are logged and rethrown as OnvifException.
+ */
 public class OnvifProfiles {
     private static final Logger logger = LogManager.getLogger(OnvifProfiles.class);
 
@@ -17,12 +41,11 @@ public class OnvifProfiles {
     }
 
     /**
-     * Get the profiles for a given Cctv object. The profiles are retrieved using
-     * the media URL from the Cctv object. The response is parsed and the profiles
-     * are stored in the Cctv object.
+     * Fetches ONVIF profiles and their corresponding stream URIs for the specified CCTV device.
+     * Updates the provided Cctv object with the retrieved profile and URI data.
      *
-     * @param cctv the Cctv object to store the profiles in
-     * @throws OnvifException if there is an error retrieving the profiles
+     * @param cctv The Cctv object representing the CCTV device to retrieve profiles and stream URIs for.
+     * @throws OnvifException if an error occurs while communicating with the CCTV device or processing responses.
      */
     public static void get(Cctv cctv) throws OnvifException {
         try {
@@ -37,8 +60,7 @@ public class OnvifProfiles {
             // Get the stream URI for each profile
             for (Profile profile : cctv.getProfiles()) {
                 String streamXml = String.format(ONVIF_GET_STREAM_URI, cctv.onvifInfo().header(), profile.token());
-                logger.info("Getting stream URI from {} for {} with \n{}", cctv.onvifInfo().mediaUrl(), profile.name(),
-                        streamXml);
+                logger.info("Getting stream URI from {} for {} with \n{}", cctv.onvifInfo().mediaUrl(), profile.name(), streamXml);
 
                 // Parse the response and store the stream URI in the profile
                 profile.setStreamUri(OnvifResponseParser

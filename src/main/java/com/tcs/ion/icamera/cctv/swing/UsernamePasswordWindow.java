@@ -2,12 +2,12 @@ package com.tcs.ion.icamera.cctv.swing;
 
 import com.tcs.ion.icamera.cctv.data.DataStore;
 import com.tcs.ion.icamera.cctv.onvif.OnvifEnquiry;
+import com.tcs.ion.icamera.cctv.rtsp.RtspUrlScan;
 import com.tcs.ion.icamera.cctv.util.Credential;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UsernamePasswordWindow extends SwingWindow {
 
@@ -64,13 +64,12 @@ public class UsernamePasswordWindow extends SwingWindow {
         inputPanel.repaint();
     }
 
-    private List<Credential> getAllCredentials() {
-        List<Credential> credentials = new ArrayList<>();
+    private Credential[] getAllCredentials() {
+        Credential[] credentials = new Credential[usernameFields.size()];
         for (int i = 0; i < usernameFields.size(); i++) {
             String username = usernameFields.get(i).getText();
             String password = new String(passwordFields.get(i).getPassword());
-            Credential credential = new Credential(username, password);
-            credentials.add(credential);
+            credentials[i] = new Credential(username, password);
         }
         return credentials;
     }
@@ -82,8 +81,11 @@ public class UsernamePasswordWindow extends SwingWindow {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                OnvifEnquiry.enquire(getAllCredentials());
-                failedCctvCount = DataStore.getUnauthorizedCctvCount();
+                Credential[] credentials = getAllCredentials();
+                OnvifEnquiry.enquire(credentials);
+                RtspUrlScan.scan(credentials);
+
+                failedCctvCount = DataStore.getRefuteCctvCount();
                 return null;
             }
 
@@ -105,7 +107,7 @@ public class UsernamePasswordWindow extends SwingWindow {
     @Override
     protected void buildUiAndFunctionality() {
         // Label to display the count of unauthorized CCTVs
-        String countMessage = String.format("Unauthorized CCTV count is %d out of %d identified.", DataStore.getUnauthorizedCctvCount(), DataStore.getIdentifiedCctvCount());
+        String countMessage = String.format("Unauthorized CCTV count is %d out of %d identified.", DataStore.getRefuteOnvifCctvCount(), DataStore.getIdentifiedCctvCount());
         JLabel cctvCountLabel = createLabel(countMessage);
         cctvCountLabel.setForeground(Color.RED);
 

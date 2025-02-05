@@ -2,6 +2,13 @@ package com.tcs.ion.icamera.cctv.model;
 
 import com.google.gson.Gson;
 
+/**
+ * The Profile class represents a media profile with various attributes
+ * such as name, token, stream URI, encoding parameters, resolution,
+ * quality, frame rate, encoding interval, and bitrate. It provides
+ * getters and setters for these attributes, allowing users to customize
+ * and retrieve profile settings.
+ */
 public class Profile {
 
     private String name;

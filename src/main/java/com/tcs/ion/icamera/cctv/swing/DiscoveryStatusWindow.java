@@ -1,7 +1,6 @@
 package com.tcs.ion.icamera.cctv.swing;
 
 import com.tcs.ion.icamera.cctv.data.DataStore;
-import com.tcs.ion.icamera.cctv.onvif.OnvifNetworkScan;
 
 import javax.swing.*;
 
@@ -19,7 +18,7 @@ public class DiscoveryStatusWindow extends SwingWindow {
         add(discoveredCountLabel, discoveredCountValue);
 
         JButton networkScanButton = createOkButton("Scan Network for more CCTVs", "Click to scan your entire network for more CCTVs.");
-        networkScanButton.addActionListener(e -> next(new NetworkScanWindow(OnvifNetworkScan::scan)));
+        networkScanButton.addActionListener(e -> next(new NetworkScanWindow()));
         add(networkScanButton);
 
         JButton ipRangeScanButton = createOkButton("Scan Network with IP Range", "Click to provide an IP range to scan for more CCTVs.");

@@ -1,6 +1,6 @@
 package com.tcs.ion.icamera.cctv.swing;
 
-import com.tcs.ion.icamera.cctv.ffmpeg.CctvVerification;
+import com.tcs.ion.icamera.cctv.rtsp.CctvVerification;
 
 import javax.swing.*;
 

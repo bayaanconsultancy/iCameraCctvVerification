@@ -2,6 +2,8 @@ package com.tcs.ion.icamera.cctv.swing;
 
 import com.tcs.ion.icamera.cctv.data.DataStore;
 import com.tcs.ion.icamera.cctv.onvif.OnvifEnquiry;
+import com.tcs.ion.icamera.cctv.rtsp.RtspUrlScan;
+import com.tcs.ion.icamera.cctv.util.Credential;
 import com.tcs.ion.icamera.cctv.xssf.SheetNames;
 import com.tcs.ion.icamera.cctv.xssf.TemplateColumns;
 import com.tcs.ion.icamera.cctv.xssf.Workbook;
@@ -93,10 +95,11 @@ public class IdentifiedCctvWindow extends SwingWindow {
             repaintFrame();
 
             new Thread(() -> {
-                DataStore.setOnvifCredential(usernameField.getText(), String.valueOf(passwordField.getPassword()));
-                OnvifEnquiry.enquire();
+                Credential credential = new Credential(usernameField.getText(), String.valueOf(passwordField.getPassword()));
+                OnvifEnquiry.enquire(credential);
+                RtspUrlScan.scan(credential);
 
-                if (DataStore.getUnauthorizedCctvCount() > 0) {
+                if (DataStore.getRefuteCctvCount() > 0) {
                     next(new UsernamePasswordWindow());
                 } else {
                     next(new DownloadTemplateWindow());
